@@ -21,7 +21,9 @@ Plus the exports people actually need at the moment someone demands paperwork: a
 
 | | |
 |---|---|
-| **New here?** | **[`docs/START-HERE.md`](docs/START-HERE.md) — read this first.** What to read, in what order, and what you must not change |
+| **Current state** | **[`docs/SESSION-LOG.md`](docs/SESSION-LOG.md) — where the project is right now and what to do next. The source of truth for state** |
+| **New here?** | **[`docs/START-HERE.md`](docs/START-HERE.md) — read this second.** What to read, in what order, and what you must not change |
+| Working as an agent? | [`docs/AGENT-PROMPT.md`](docs/AGENT-PROMPT.md) — start-of-session prompt and the required end-of-session protocol |
 | Context | [`docs/CONTEXT.md`](docs/CONTEXT.md) — how we got here, who is building it, what is already decided |
 | Plan | [`docs/PLAN.md`](docs/PLAN.md) — the full plan: research, competitors, every screen, architecture, compliance, roadmap |
 | Next step | [`docs/PHASE-0.md`](docs/PHASE-0.md) — legal, toolchain, three spikes |

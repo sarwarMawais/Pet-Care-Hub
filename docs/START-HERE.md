@@ -33,9 +33,14 @@ Plus exports shaped for the moment someone demands paperwork: a boarding certifi
 
 **Everyone, first (about 20 minutes):**
 
-1. This file
-2. [`CONTEXT.md`](CONTEXT.md) — how we got here, who is building it, what has already been decided and closed
-3. [`../CLAUDE.md`](../CLAUDE.md) — the twelve product laws and the platform traps. **These are binding.**
+1. **[`SESSION-LOG.md`](SESSION-LOG.md) — where the project actually is right now, and what the last session left for you. This is the source of truth for state.**
+2. This file
+3. [`CONTEXT.md`](CONTEXT.md) — how we got here, who is building it, what has already been decided and closed
+4. [`../CLAUDE.md`](../CLAUDE.md) — the twelve product laws and the platform traps. **These are binding.**
+
+**If you are an agent:** [`AGENT-PROMPT.md`](AGENT-PROMPT.md) has the start-of-session prompt, the
+required end-of-session protocol, and the definition of done. Memory is keyed to the working
+directory, so opening this folder gives you an empty memory — **the repo carries the state.**
 
 **Then, depending on the task:**
 
@@ -85,6 +90,8 @@ Pet/                          <- you are here
 ├── settings.gradle.kts       the module graph (includes commented out)
 ├── gradle/libs.versions.toml every dependency, version and risk rating
 ├── docs/
+│   ├── SESSION-LOG.md        current state + what to do next + session history
+│   ├── AGENT-PROMPT.md       the session protocol every agent must follow
 │   ├── START-HERE.md         this file
 │   ├── CONTEXT.md            how we got here, who, constraints
 │   ├── PLAN.md               the full plan — 12 sections, 970 lines

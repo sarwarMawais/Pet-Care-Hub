@@ -6,6 +6,27 @@ Read this before touching anything. This file is the short version that must hol
 > gives the reading order, the current state, and what you are not allowed to change.
 > Then [`docs/CONTEXT.md`](docs/CONTEXT.md) for how we got here, and [`docs/PLAN.md`](docs/PLAN.md) for the full plan.
 
+## Session protocol — required, every session
+
+Memory is keyed to the working directory, so opening this folder gives a **fresh, empty memory**.
+**The repository carries the state; memory is only a convenience layer.** If a fact exists only in
+memory, treat it as lost.
+
+**Start:** read [`docs/SESSION-LOG.md`](docs/SESSION-LOG.md) → "Where we are right now", then
+`git log --oneline -10`. If the log and the git history disagree, **trust git and fix the log.**
+State what you found and what you plan to do before starting multi-step work.
+
+**End — all five, none optional:**
+
+1. Rewrite the "Where we are right now" block in `docs/SESSION-LOG.md` so it is accurate *now*
+2. Add a history entry at the top of that file: date, commits, done, decided, corrected, learned
+3. Write **specific** next steps — "uncomment `:shared:core-model`, add its build file, verify the build passes", not "continue with the modules"
+4. Update every doc you invalidated, in the same commit; add an ADR for any expensive-to-reverse decision
+5. Update memory (short, pointer-shaped) and commit to `main`
+
+Full protocol, the start-of-session prompt, and the definition of done:
+**[`docs/AGENT-PROMPT.md`](docs/AGENT-PROMPT.md)**.
+
 ## What this is
 
 A household-shared pet care app for Android **and** iOS, Kotlin Multiplatform + Compose Multiplatform.
