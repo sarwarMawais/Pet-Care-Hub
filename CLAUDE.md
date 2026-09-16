@@ -1,7 +1,10 @@
 # Pet Care Hub — working agreements
 
-Read this before touching anything. The full reasoning lives in [`docs/PLAN.md`](docs/PLAN.md);
-this file is the short version that must hold on every change.
+Read this before touching anything. This file is the short version that must hold on every change.
+
+> **Coming to this project with no prior context? Read [`docs/START-HERE.md`](docs/START-HERE.md) first** — it
+> gives the reading order, the current state, and what you are not allowed to change.
+> Then [`docs/CONTEXT.md`](docs/CONTEXT.md) for how we got here, and [`docs/PLAN.md`](docs/PLAN.md) for the full plan.
 
 ## What this is
 
@@ -49,8 +52,15 @@ reviews already say what happens. Full evidence in `docs/research/competitors-an
 
 ## Copy in from Motivoa, do not port wholesale
 
-Motivoa (`../Motivoa`) is the same developer's Android app. Five things are worth carrying over.
-Copy them in; do not migrate the app. See `docs/research/kmp-stack-and-motivoa-reuse.md`.
+**Motivoa is the same developer's shipped Android app. It lives at
+`C:\Users\MuhammadSarwar\AndroidProjects\Motivoa`, source root
+`app/src/main/java/com/affirmdaily/motivation/`.**
+
+Five things are worth carrying over. Copy them in; do **not** migrate the app, and do **not** modify
+Motivoa from this project — read from it and leave it alone.
+
+**Full file-by-file instructions with verified paths: [`docs/MOTIVOA-REUSE.md`](docs/MOTIVOA-REUSE.md).**
+Summary:
 
 | Asset | Where | Why |
 |---|---|---|

@@ -1,6 +1,8 @@
 # Pet Care Hub — Plan v1 (2026-09-15)
 
-Status: **plan only, implementation not started.** Full plan page: `pet-care-hub-plan.html` in this folder (published: https://claude.ai/artifact/VaMa9VqJyBNvxiUST5zWT8). Research behind it: the three `research-*.md` files here.
+> **This is the one-page summary.** New to the project? Read [`START-HERE.md`](START-HERE.md) first.
+
+Status: **plan only, implementation not started.** Full plan: [`PLAN.md`](PLAN.md) (also as a styled page in [`plan-page.html`](plan-page.html), published at https://claude.ai/artifact/VaMa9VqJyBNvxiUST5zWT8). Research behind it: the three reports in [`research/`](research/).
 
 ## Context
 The user explored Trainline-style rail booking (unbuildable solo: licensed retail business), Vinted-style marketplaces (liquidity + unit economics), and a pharma B2B SaaS (declined — user does not want a pharma app). They chose a **consumer app people love and keep paying for**, and picked the pet care category. This plan is the result of research into what owners want, what competitors do, store policies, and the KMP stack.
@@ -29,7 +31,7 @@ Canvas creature rig (`companion/ui/CompanionChibi.kt` etc., zero Android imports
 
 ## Compliance — top 8
 Exact alarms (Play, critical) · Paywall disclosure 3.1.2 (Apple, critical) · Health apps declaration ("no health features" + ship disclaimer; verify) · UGC obligations with no private-group exemption (both) · **Register as Organization** (skips 12-tester/14-day rule; needs D-U-N-S) · DSA trader status with business address (both) · European Accessibility Act (EU law) · Apple 4.3(b) crowded-category rule (differentiate in v1).
-Full checklist in the HTML page §Store compliance and `research-store-policies.md`.
+Full checklist in [`COMPLIANCE.md`](COMPLIANCE.md); the underlying audit is [`research/store-policies.md`](research/store-policies.md).
 
 ## Roadmap
 - **Wk 0–3 Phase 0:** entity + D-U-N-S + Organization enrolment; Mac + Codemagic; signed iOS hello-world; spikes: Nav3 swipe-back, Room+PowerSync+Supabase two-device round-trip, exact-alarm consent + iOS 64-slot materialiser; Play policy question on USE_EXACT_ALARM.

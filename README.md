@@ -21,12 +21,17 @@ Plus the exports people actually need at the moment someone demands paperwork: a
 
 | | |
 |---|---|
+| **New here?** | **[`docs/START-HERE.md`](docs/START-HERE.md) — read this first.** What to read, in what order, and what you must not change |
+| Context | [`docs/CONTEXT.md`](docs/CONTEXT.md) — how we got here, who is building it, what is already decided |
 | Plan | [`docs/PLAN.md`](docs/PLAN.md) — the full plan: research, competitors, every screen, architecture, compliance, roadmap |
+| Next step | [`docs/PHASE-0.md`](docs/PHASE-0.md) — legal, toolchain, three spikes |
 | Architecture | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
 | Store compliance | [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md) — the pre-submission checklist |
 | Decisions | [`docs/adr/`](docs/adr/) — one file per locked decision |
+| Code reuse | [`docs/MOTIVOA-REUSE.md`](docs/MOTIVOA-REUSE.md) — exact files to copy from the developer's other app |
+| Glossary | [`docs/GLOSSARY.md`](docs/GLOSSARY.md) |
 | Research | [`docs/research/`](docs/research/) — the three source reports, dated 2026-09-15 |
-| Working agreements | [`CLAUDE.md`](CLAUDE.md) |
+| Working agreements | [`CLAUDE.md`](CLAUDE.md) — the twelve product laws, binding |
 
 Next action is **Phase 0** in the plan. None of it is feature code: register the legal entity, get the toolchain producing a signed iOS build, and run the three spikes that decide the architecture.
 
