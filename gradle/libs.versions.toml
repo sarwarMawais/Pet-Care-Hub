@@ -1,0 +1,115 @@
+# Pet Care Hub — dependency catalogue.
+#
+# STATUS: provisional. Every version below comes from the research pass dated 2026-09-15
+# (docs/research/kmp-stack-and-motivoa-reuse.md). Pin and re-verify each one against its
+# changelog on day one of Phase 0 — several were taken from aggregator sources.
+#
+# Risk key from the research: [low] safe, [med] watch it, [high] spike before committing.
+
+[versions]
+# --- Build ---------------------------------------------------------------
+agp = "8.13.2"
+# NOTE: purchases-kmp requires Kotlin 2.3.20+. Motivoa sits on 2.2.21 — we start higher here.
+kotlin = "2.3.20"
+ksp = "2.3.20-2.0.1"                  # verify: must match the Kotlin version exactly
+compileSdk = "36"                      # Play requires target API 36 (deadline passed 2026-08-31)
+targetSdk = "36"
+minSdk = "26"
+javaVersion = "17"
+
+# --- UI ------------------------------------------------------------------
+composeMultiplatform = "1.12.0"        # [low] iOS stable since 1.8
+navigation3 = "1.1.1"                  # [med] needs CMP >= 1.10; hand-register NavKey serializers off-JVM
+lifecycleViewmodel = "2.10.0"          # KMP-capable
+
+# --- Data ----------------------------------------------------------------
+room = "2.8.4"                         # [low] KMP-capable; stay off androidx.room3 until after first ship
+sqlite = "2.6.1"                       # androidx.sqlite bundled driver
+datastore = "1.2.1"                    # [low]
+
+# --- Backend / sync ------------------------------------------------------
+supabase = "3.2.0"                     # [med] supabase-kt BOM; EU region project
+powersync = "1.13.0"                   # [med] offline-first sync between SQLite and Postgres
+ktor = "3.3.0"
+
+# --- Commerce ------------------------------------------------------------
+purchasesKmp = "3.2.0"                 # [low] RevenueCat; bundles iOS SDK, no CocoaPods
+
+# --- Reminders -----------------------------------------------------------
+alarmee = "2.2.0"                      # [med] repeating alarms + local notifications, single maintainer
+workManager = "2.11.2"                 # Android only: re-materialiser
+
+# --- Files / media -------------------------------------------------------
+filekit = "0.12.0"                     # [low] native pickers, no storage permissions
+coil = "3.3.0"                         # [low] Coil 3 is the multiplatform one (Coil 2 is Android-only)
+peekaboo = "0.5.3"                     # [med] camera + crop, Android/iOS only
+pdfkmp = "1.1.0"                       # [med] young; platform-actual fallback documented in the plan
+
+# --- Platform ------------------------------------------------------------
+koin = "4.1.1"                         # [low] shortest bridge from Hilt
+koinAnnotations = "2.3.0"
+kotlinxDatetime = "1.0.0"              # [low] note: java.time patterns do NOT exist here
+kotlinxSerialization = "1.9.0"
+kotlinxCoroutines = "1.11.0"
+glance = "1.2.0"                       # Android widgets only
+
+# --- Observability -------------------------------------------------------
+sentry = "0.16.0"                      # sentry-kotlin-multiplatform
+aptabase = "0.3.0"                     # privacy-friendly analytics; no IDFA, so no ATT prompt
+
+# --- Test ----------------------------------------------------------------
+turbine = "1.2.1"
+
+[libraries]
+# Compose Multiplatform is applied via its Gradle plugin; artifacts come from the plugin's BOM.
+androidx-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
+
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt" }
+supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
+supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt" }
+supabase-storage = { module = "io.github.jan-tennert.supabase:storage-kt" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+powersync-core = { module = "com.powersync:core", version.ref = "powersync" }
+
+purchases-core = { module = "com.revenuecat.purchases:purchases-kmp-core", version.ref = "purchasesKmp" }
+
+alarmee = { module = "io.github.tweener:alarmee", version.ref = "alarmee" }
+workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
+
+filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinAnnotations" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+
+glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
+glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
+
+sentry-kmp = { module = "io.sentry:sentry-kotlin-multiplatform", version.ref = "sentry" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }

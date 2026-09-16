@@ -1,0 +1,822 @@
+<title>Pet Care Hub Blueprint</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F6F3; --surface:#FFFFFF; --surface-2:#EAEFEA; --ink:#1B211D; --muted:#5B665F; --line:#D6DDD6;
+  --accent:#0F6B66; --accent-soft:#DDEDEB; --on-accent:#FFFFFF; --brass:#9A6A16; --brass-soft:#F3E7CF;
+  --crit:#B3261E; --crit-soft:#F9E1DE; --high:#A66200; --high-soft:#F7E6CC; --ok:#2E7D32; --ok-soft:#DFF0E0;
+  --display:"Newsreader",Georgia,"Times New Roman",serif; --body:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif; --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121715; --surface:#1A211D; --surface-2:#222B26; --ink:#E7ECE8; --muted:#9BA79F; --line:#2B352F;
+    --accent:#5FC6BE; --accent-soft:#17342F; --on-accent:#0B1513; --brass:#D9A441; --brass-soft:#3A2E14;
+    --crit:#F28B82; --crit-soft:#3B1F1D; --high:#F0B35A; --high-soft:#3A2B12; --ok:#7BC67E; --ok-soft:#1B3220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121715; --surface:#1A211D; --surface-2:#222B26; --ink:#E7ECE8; --muted:#9BA79F; --line:#2B352F;
+  --accent:#5FC6BE; --accent-soft:#17342F; --on-accent:#0B1513; --brass:#D9A441; --brass-soft:#3A2E14;
+  --crit:#F28B82; --crit-soft:#3B1F1D; --high:#F0B35A; --high-soft:#3A2B12; --ok:#7BC67E; --ok-soft:#1B3220;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.page{max-width:1180px;margin:0 auto;padding:28px 20px 80px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:44px;align-items:start}
+nav.toc{position:sticky;top:20px;font-size:13px}
+nav.toc .eyebrow{margin-bottom:10px}
+nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+nav.toc a{display:block;padding:5px 8px;border-left:2px solid var(--line);color:var(--muted);text-decoration:none;line-height:1.3}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0;max-width:760px}
+h1,h2,h3,h4{font-family:var(--display);font-weight:500;letter-spacing:-0.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(36px,5vw,54px);line-height:1.02;font-weight:400}
+h2{font-size:30px;line-height:1.15;margin-top:64px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:21px;line-height:1.25;margin-top:34px}
+h4{font-size:17px;margin-top:22px;font-family:var(--body);font-weight:600;letter-spacing:0}
+p{margin:12px 0;max-width:68ch}
+ul,ol{margin:10px 0;padding-left:22px;max-width:68ch}
+li{margin:5px 0}
+.eyebrow{font-family:var(--body);font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.lede{font-family:var(--display);font-size:21px;line-height:1.4;color:var(--ink);max-width:62ch;margin:18px 0 0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+header.masthead{padding-bottom:10px}
+.mark{display:inline-flex;align-items:center;gap:10px;color:var(--accent);font-family:var(--display);font-size:16px;margin-bottom:18px}
+.mark svg{width:26px;height:26px}
+.chip{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface);white-space:nowrap;vertical-align:middle}
+.chip.android{border-color:transparent;background:var(--ok-soft);color:var(--ok)}
+.chip.ios{border-color:transparent;background:var(--surface-2);color:var(--ink)}
+.chip.both{border-color:transparent;background:var(--accent-soft);color:var(--accent)}
+.chip.v1{border-color:transparent;background:var(--brass-soft);color:var(--brass)}
+.chip.v2{border-color:var(--line);color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tile .n{font-family:var(--display);font-size:32px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tile .l{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:18px 0;max-width:68ch}
+.callout.warn{border-left-color:var(--high);background:var(--high-soft)}
+.callout.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.callout p{margin:6px 0}
+.callout .eyebrow{color:inherit;opacity:.75}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:14px 0}
+.tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.tablewrap table{margin:0}
+th{font-family:var(--body);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sev{font-weight:600;white-space:nowrap}
+.sev.crit{color:var(--crit)} .sev.high{color:var(--high)} .sev.ok{color:var(--ok)}
+blockquote{margin:14px 0;padding:0 0 0 16px;border-left:2px solid var(--brass);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.45;max-width:62ch}
+blockquote cite{display:block;font-family:var(--body);font-style:normal;font-size:12.5px;color:var(--muted);margin-top:6px}
+.laws{counter-reset:law;list-style:none;padding:0;margin:16px 0;max-width:none}
+.laws li{counter-increment:law;display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line);margin:0}
+.laws li::before{content:counter(law,decimal-leading-zero);font-family:var(--mono);font-size:13px;color:var(--brass);padding-top:3px}
+.laws b{display:block;font-weight:600;margin-bottom:2px}
+.laws span{color:var(--muted);font-size:14px}
+.screen{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px 8px;margin:22px 0}
+.screen .head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;margin-bottom:6px}
+.screen .head h3{margin:0;font-size:22px}
+.screen .why{color:var(--muted);font-size:14px;margin:4px 0 12px;max-width:none}
+dl.facets{margin:0;display:grid;grid-template-columns:92px minmax(0,1fr);border-top:1px solid var(--line)}
+dl.facets dt{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 8px 10px 0;border-bottom:1px solid var(--line)}
+dl.facets dd{margin:0;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.5}
+dl.facets dd:last-of-type,dl.facets dt:last-of-type{border-bottom:none}
+dl.facets dd ul{margin:4px 0;padding-left:18px;max-width:none}
+dl.facets dd li{margin:2px 0}
+dl.facets code,.mono{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:16px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h4{margin:0 0 8px}
+.card ul{margin:0;padding-left:18px;font-size:14px;max-width:none}
+.check{list-style:none;padding:0;max-width:none}
+.check li{display:grid;grid-template-columns:18px 1fr;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.check li::before{content:"";width:14px;height:14px;margin-top:3px;border:1.5px solid var(--muted);border-radius:3px}
+.phase{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.phase .when{font-family:var(--mono);font-size:13px;color:var(--brass);padding-top:3px}
+.phase h4{margin:0 0 6px}
+.phase ul{margin:4px 0;font-size:14px;max-width:none}
+.sources{font-size:13px;columns:2;column-gap:28px;max-width:none}
+.sources li{break-inside:avoid;margin:3px 0}
+details{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:0 16px;margin:12px 0}
+summary{cursor:pointer;padding:12px 0;font-weight:600;font-size:14.5px}
+details[open] summary{border-bottom:1px solid var(--line)}
+@media (max-width:900px){
+  .page{grid-template-columns:1fr;gap:20px}
+  nav.toc{position:static}
+  nav.toc ol{flex-direction:row;flex-wrap:wrap;gap:6px}
+  nav.toc a{border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+  h2{font-size:26px;margin-top:48px}
+  dl.facets{grid-template-columns:1fr}
+  dl.facets dt{padding-bottom:0;border-bottom:none}
+  dl.facets dd{padding-top:4px}
+  .sources{columns:1}
+  .phase{grid-template-columns:1fr;gap:4px}
+}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+</style>
+
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <div class="eyebrow">Contents</div>
+  <ol>
+    <li><a href="#verdict">The honest verdict</a></li>
+    <li><a href="#research">What owners want</a></li>
+    <li><a href="#competitors">Competitors</a></li>
+    <li><a href="#laws">Product laws</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#screens">Screen by screen</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#reuse">What Motivoa gives us</a></li>
+    <li><a href="#compliance">Store compliance</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#risks">Risks &amp; open items</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="masthead">
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21c-3.5 0-6.5-2.2-6.5-5.2 0-2.1 1.6-3.6 3.2-4.6.9-.6 1.7-1.3 2.3-2.2.4-.6.7-.6 1.1 0 .6.9 1.4 1.6 2.3 2.2 1.6 1 3.2 2.5 3.2 4.6 0 3-3 5.2-6.5 5.2Z" fill="currentColor"/><circle cx="5.5" cy="8.5" r="1.9" fill="currentColor"/><circle cx="9" cy="4.8" r="1.9" fill="currentColor"/><circle cx="15" cy="4.8" r="1.9" fill="currentColor"/><circle cx="18.5" cy="8.5" r="1.9" fill="currentColor"/></svg>
+    Pet Care Hub
+  </div>
+  <div class="eyebrow">Product plan · v1 · Kotlin Multiplatform · Google Play + App Store</div>
+  <h1>One record for the whole household, on both phones.</h1>
+  <p class="lede">A shared daily care log (who fed, walked, medicated — and when) fused with a portable lifetime health record, unlimited pets on one price, and exports shaped for the moment someone demands a document: a new vet, a boarding kennel, an insurer, a border.</p>
+  <div class="meta">
+    <span>Status <b>Plan only — implementation not started</b></span>
+    <span>Research date <b>15 Sep 2026</b></span>
+    <span>Markets <b>US · CA · UK · EU</b></span>
+    <span>Stack <b>KMP + Compose Multiplatform</b></span>
+  </div>
+</header>
+
+<h2 id="verdict">The honest verdict</h2>
+<p><b>Will this get millions of users?</b> Not on its own. No standalone pet-record app has ever passed one million installs through consumer distribution. The only one over 1M — PetDesk — is sold to vet clinics, who invite their clients. Everything that relied on the app store alone stalled between 100K and 500K.</p>
+
+<div class="tiles">
+  <div class="tile"><div class="n">2.2★</div><div class="l">11pets — the incumbent, on 500K+ installs. Its own users are publicly leaving over a €69/yr paywall and a botched migration.</div></div>
+  <div class="tile"><div class="n">1M+</div><div class="l">PetDesk — the only record app past a million. Distributed by vets, and owners can't edit their own data.</div></div>
+  <div class="tile"><div class="n">~$1.8M</div><div class="l">Dogo's estimated ARR at 5M downloads. The realistic ceiling for a consumer pet app — and Dogo sells training, a stronger hook.</div></div>
+  <div class="tile"><div class="n">3–5</div><div class="l">Apps the typical owner installs in sequence looking for one that does logging + records + sharing + documents. None does.</div></div>
+</div>
+
+<p><b>Will people pay?</b> Yes — and the reviews say exactly for what: unlimited pets, a medical crisis (cancer, seizures, diabetes, post-surgery), removing ads, exports and documents that actually open, and supporting a visible developer who replies. They refuse when the price exceeds their daily-app benchmark (<em>"$5 is a small fee. $50+ is ridiculous"</em>), when basic multi-pet is the paywall, or when a static utility demands <em>"yet another subscription."</em></p>
+
+<div class="callout">
+  <div class="eyebrow">What this plan is actually betting on</div>
+  <p>The gap is real and validated: <b>nobody combines shared daily logging with a real health record</b>, and users prove it by serially installing apps to assemble one. The incumbent has 500K installs, a 2.2★ rating, a documented data-export file, and <b>no competitor offers an import path</b>. The best-loved apps are single developers with 100K installs, broken sync, and no widgets.</p>
+  <p>Realistic target: <b>100K–300K installs and 3–6K paying households in 24 months</b>, growing through ASO on high-intent queries, an "Import from 11pets" bridge, the household-invite loop (every user recruits their partner, kids, sitter), and later a vet/sitter channel. That is a durable indie business, not a unicorn. Plan for that, and let anything more be upside.</p>
+</div>
+
+<p>Three things must be <em>boringly correct</em> or none of the rest matters, because they are the three things every competitor gets wrong: <b>sync between household devices</b>, <b>medication reminders that fire on time</b>, and <b>documents you can open at the vet counter with no signal</b>.</p>
+
+<h2 id="research">What owners actually want</h2>
+<p>Evidence base: several hundred verbatim Play and App Store reviews scraped on 15 Sep 2026, plus Reddit recommendation threads. The loudest signal in the whole dataset is people being told to <em>build a spreadsheet</em> — the top-voted advice in r/LifeProTips for tracking pet vaccinations. That is a product opportunity stated as a workaround.</p>
+
+<blockquote>"I'm looking for something that can be transferable and used independently of a specific vet office."<cite>r/Pets — the PetDesk critique, stated as a requirement by someone who has never used PetDesk</cite></blockquote>
+
+<h3>Jobs to be done, ranked by evidence</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>Job</th><th>Strength</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td><b>Don't let me screw up the medication or vaccine schedule</b></td><td class="sev crit">Very strong</td><td>Cancer/seizure/diabetes owners; "keeps us from making medication mistakes"; "don't rely on your vet to remind you"</td></tr>
+<tr><td class="num">2</td><td><b>Let my household see what's done so we don't double-feed</b></td><td class="sev crit">Very strong</td><td>"Six people plus two dogs in our pack"; whiteboards and spiral notebooks being replaced</td></tr>
+<tr><td class="num">3</td><td><b>One portable record not hostage to my vet or my app vendor</b></td><td class="sev crit">Very strong</td><td>11pets lockouts after 7+ years; PetDesk owners can't edit their own data</td></tr>
+<tr><td class="num">4</td><td><b>Produce the document someone is demanding, right now</b></td><td class="sev crit">Very strong</td><td>"During an emergency I could not retrieve the records, just when I needed them most"; boarding kennels; borders</td></tr>
+<tr><td class="num">5</td><td><b>Store the actual PDFs and photos — and let me VIEW them</b></td><td class="sev high">Strong</td><td>PetNoter's #1 praise; PetnotePlus lets you upload but not open; DogNote's top request</td></tr>
+<tr><td class="num">6</td><td><b>Handle all my animals without charging per head</b></td><td class="sev high">Strong</td><td>Fosters at 15-pet caps; 30 reptiles; rats; horses; livestock</td></tr>
+<tr><td class="num">7</td><td><b>Brief my pet sitter without writing a novel</b></td><td class="sev high">Strong</td><td>Daycare staff, family sitters, multi-household switching</td></tr>
+<tr><td class="num">8</td><td><b>Show me trends so I catch problems early</b></td><td class="sev high">Strong</td><td>Weight, seizures, glucose — a diabetic-dog owner said he'd pay for graphs</td></tr>
+<tr><td class="num">9</td><td>Survive the puppy phase</td><td>Moderate</td><td>Potty prediction; "big buttons are nice when you're half asleep"</td></tr>
+<tr><td class="num">10</td><td>Keep and enjoy the memories</td><td>Moderate</td><td>Monthly albums; gotcha day; archiving a pet that has died</td></tr>
+<tr><td class="num">11</td><td>Track what this animal costs me</td><td>Moderate</td><td>Expense trackers praised as a delighted surprise</td></tr>
+<tr><td class="num">12</td><td>Get me through pet-travel paperwork</td><td>Moderate (high value, low awareness)</td><td>UK→EU AHC costs £150–250 per trip with hard 10-day and 21-day windows</td></tr>
+</tbody></table></div>
+
+<h3>What converts, and what kills</h3>
+<div class="two">
+  <div class="card"><h4>They pay for</h4><ul>
+    <li>A specific medical crisis — cancer, seizures, diabetes, surgery recovery</li>
+    <li>Genuinely unlimited pets</li>
+    <li>Removing ads</li>
+    <li>Exports and a document vault that works</li>
+    <li>Graphs on custom metrics</li>
+    <li>Supporting a responsive indie developer — two users offered to donate unprompted</li>
+    <li>A one-time lifetime option — requested in five different apps' reviews, refused by all</li>
+  </ul></div>
+  <div class="card"><h4>They uninstall over</h4><ul>
+    <li><b>Any pet-count paywall</b> — 1, 3, 5 or 15 pets. Every observed instance produced an uninstall or 1★</li>
+    <li>Price above the daily-app benchmark: "$5 is a small fee, $50+ is ridiculous"</li>
+    <li>Retracting free features or breaking a "lifetime" promise</li>
+    <li>Sync that needs an app restart; reminders 10–60 minutes late</li>
+    <li>Documents that upload but won't open; save buttons hidden behind the keyboard</li>
+    <li>A dead pet consuming a paid slot</li>
+    <li>Support email that bounces</li>
+  </ul></div>
+</div>
+
+<h3>Features people love anywhere</h3>
+<ul>
+  <li><b>Monthly photo albums / growth timelines</b> — the single most emotionally cited feature: <em>"a picture from every month since I adopted my cat."</em></li>
+  <li><b>Likes and comments on logged events</b> — turns a chore log into a family feed (DogLog).</li>
+  <li><b>Gotcha day</b> alongside birthday.</li>
+  <li><b>Supply inventory that warns before you run out</b> of food or a monthly preventative.</li>
+  <li><b>Widgets, Watch and Siri for one-tap logging</b> — the Android widget is the most-requested missing feature in the category's best shared-care app.</li>
+  <li><b>Multi-household switching for sitters</b> — the one good idea in an otherwise zero-traction app.</li>
+  <li><b>Barcode food scanning checked against logged allergies</b> — genuinely novel (Petio).</li>
+</ul>
+
+<h2 id="competitors">Competitors</h2>
+<p>Store figures scraped live on 15 Sep 2026. The market is split cleanly into two camps — daily coordination with no records, and records with no daily loop — plus a vet-owned CRM. Nobody bridges them.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>App</th><th>Camp</th><th>Play</th><th>iOS</th><th>Pricing</th><th>Why they lose</th></tr></thead>
+<tbody>
+<tr><td><b>11pets</b></td><td>Records</td><td class="num">2.2★ · 5.7K · 500K+</td><td class="num">3.3★ · 77</td><td>€69/yr; gates reminders <em>and</em> multi-pet</td><td>Price shock on a "lifetime" base, data loss on migration, lockouts, "databasey" IA, ignored support</td></tr>
+<tr><td><b>PetDesk</b></td><td>Vet CRM</td><td class="num">4.8★ · 31.7K · 1M+</td><td class="num">—</td><td>Free to owners; clinic pays</td><td>Owners can't edit anything; reminders won't clear; dies when you change vets</td></tr>
+<tr><td><b>Pet Care Tracker</b> (dogcat.app)</td><td>Both, thin</td><td class="num">4.3★ · 6.4K · 100K+</td><td class="num">—</td><td>Ads; unlimited pets free</td><td>Solo dev, dated UI, no time-of-day recurrence, no bulk actions. <b>Wins ASO</b> for all three key queries</td></tr>
+<tr><td><b>DogLog</b></td><td>Daily log</td><td class="num">4.5★ · 1.3K · 100K+</td><td class="num">4.8★ · 1.3K</td><td>$3.99/mo · $39.99/yr</td><td>Sync needs an app restart; notifications 10–60 min late; 3-dog pack cap; dogs only</td></tr>
+<tr><td><b>PetnotePlus</b></td><td>Records</td><td class="num">4.5★ · 1.6K · 50K+</td><td class="num">4.6★ · 15</td><td>5 pets free</td><td>Documents upload but can't be viewed; blocky UI; a reported total data-loss incident</td></tr>
+<tr><td><b>PetNoter</b></td><td>Records</td><td class="num">4.3★ · 148 · 10K+</td><td class="num">4.2★ · 17</td><td>$14.99/yr · $59.99 life; 3 pets free</td><td>Document upload and export both paywalled; support email bounced</td></tr>
+<tr><td><b>DogNote</b></td><td>Daily log</td><td class="num">4.3★ · 256 · 10K+</td><td class="num">4.7★ · 904</td><td>~$4.99/mo; 1 pet free</td><td>Android is a second-class citizen; no document vault; nag-to-rate</td></tr>
+<tr><td><b>GreatPetCare</b> (ex-Pawprint)</td><td>Records</td><td class="num">2.3★ · 342 · 10K+</td><td class="num">—</td><td>Premium + $10 per record request</td><td>Charges for what your vet gives free; broken uploads; save buttons off-screen</td></tr>
+<tr><td><b>Notepet</b></td><td>Meds</td><td class="num">2.6★ · 43 · 1K+</td><td class="num">—</td><td>Sub</td><td>Alerts die past one medication; requires network</td></tr>
+<tr><td>Who Fed The Dog?, I Fed the Pet, Kibbl, PetPilot, Pet Feeder</td><td>Feeding only</td><td class="num">≤1K each</td><td class="num">—</td><td>Mixed</td><td>Single-purpose toys; PetPilot/Fed? are iCloud-only (no Android); Kibbl on v1.0 since 2022</td></tr>
+</tbody></table></div>
+
+<h3>What nobody does well</h3>
+<ol>
+  <li><b>Daily log + real health record in one app.</b> The thesis, validated by users installing 3–5 apps in sequence.</li>
+  <li><b>Reliable multi-device sync for shared care.</b> The best shared-care app's users describe the failure in painful detail.</li>
+  <li><b>Documents you can open.</b> PetDesk can't save them, DogNote has none, PetnotePlus can't display them, GreatPetCare's save button is off-screen.</li>
+  <li><b>Purpose-shaped exports.</b> Everyone ships "a PDF." Nobody ships a boarding vaccination certificate, an insurance claim pack, a new-vet handover or a sitter brief as distinct artifacts.</li>
+  <li><b>Pet-travel paperwork</b> despite AHCs costing £150–250 per trip with computable date windows.</li>
+  <li><b>Bereavement.</b> Archiving a deceased pet either isn't possible or consumes a paid slot.</li>
+  <li><b>Correct reminders.</b> Late, dead past one med, won't clear, monthly firing daily, recurring tasks deleting their own future — across six apps.</li>
+  <li><b>Quiet hours.</b> "Every 3 hours" wakes people at 3am.</li>
+  <li><b>Bulk operations.</b> No "mark done for all pets," no shared medication across pets.</li>
+  <li><b>Android/iOS parity</b>, and <b>an 11pets import bridge</b> — unclaimed.</li>
+</ol>
+
+<div class="callout warn">
+  <div class="eyebrow">What the giants can't do — and can</div>
+  <p><b>Chewy</b> owns purchase and prescription fulfilment and will never be a neutral, exportable record. <b>Rover</b>'s care log exists only inside a paid booking. <b>Tractive</b> has passive GPS/heart-rate data no phone app can fake — and can't hold a PDF or coordinate who gave the 8pm pill. <b>Petco/PetSmart</b> only work inside their own stores. The giants own <em>transactions</em>; none owns the portable, owner-controlled, multi-carer lifetime record, because that asset has no captive revenue stream. That is precisely the gap.</p>
+</div>
+
+<h2 id="laws">Product laws</h2>
+<p>Each of these is a direct answer to a documented failure in the category. They are not preferences; break one and the reviews already tell you what happens.</p>
+<ol class="laws">
+  <li><b>Unlimited pets in the free tier. Forever.</b><span>Six apps were punished for gating this. It is the sharpest wedge against the entire field and the one promise we never retract.</span></li>
+  <li><b>Archiving a pet that has died is free, dignified, and never consumes a slot.</b><span>No paywall, no upsell, no promotional notification for a memorialised pet. A paywall shown to a grieving owner ends up on social media.</span></li>
+  <li><b>Sync is near-real-time and attributed.</b><span>Every log line shows who and when. If your partner logs a feed, it appears on your phone before you can ask. Eventually-consistent-on-restart is broken at the premise.</span></li>
+  <li><b>Reminders are data, not alarms.</b><span>The schedule lives in the shared database; the OS holds only a rolling window of the next 7–14 days. Exact clock times, quiet hours, repeat-until-done, snooze/skip/gave-early, and an honest fallback when Android denies exact alarms.</span></li>
+  <li><b>Documents open offline, in-app, at the vet counter.</b><span>Stored locally after first sync, previewed inline, never "sent to your phone to view."</span></li>
+  <li><b>Exports are shaped for the job.</b><span>Boarding certificate, new-vet handover, insurance claim pack, sitter brief, travel readiness — distinct, named artifacts, not one generic PDF.</span></li>
+  <li><b>Every dropdown has a free-text fallback.</b><span>Rescue mixes exist; so do arthropods and horses. Species-scoped tasks never leak across animals.</span></li>
+  <li><b>Offline-first for reads and writes.</b><span>An emergency vet visit at 2am on a rural road is the moment the record must open. Notepet lost users to a network blip.</span></li>
+  <li><b>Never retract a free feature. Never break a lifetime promise.</b><span>The 11pets extinction event, in one line.</span></li>
+  <li><b>Reply to every review and support email within 24 hours.</b><span>Measurably a growth channel here — a fix within hours converted 1★ to 5★. It is also an Apple 1.2 obligation.</span></li>
+  <li><b>Never appeal to children in art or copy.</b><span>Cute is fine; cartoon mascot with big eyes in a bubbly font drags us into Play's Families policy and COPPA. Adult audience, 16+ terms.</span></li>
+  <li><b>Say "record," never "diagnose."</b><span>No dosage calculators, no "detects," no "vet-approved." Every AI or trend output carries "consult your vet." Health copy is a compliance surface.</span></li>
+</ol>
+
+<h2 id="pricing">Pricing &amp; packaging</h2>
+<p>Anchored on what users named: <em>$5 is small, $50+ is ridiculous</em>; PetNoter's $14.99/yr is called "very reasonably priced"; DogLog's $39.99/yr draws "I can't spend that much." The category's most under-served demand is a one-time purchase. We offer it — it converts the subscription-fatigued, and Apple treats a non-consumable lifetime unlock as ordinary IAP.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Tier</th><th>Price</th><th>Includes</th><th>Why this line</th></tr></thead>
+<tbody>
+<tr><td><b>Free</b></td><td class="num">$0</td><td>Unlimited pets · daily log · household of up to 3 people · full health record · reminders · 20 documents · 1 export per month · widgets · archive</td><td>Everything the incumbent gates. Generous enough to earn 4.5★ and reviews; the free tier <em>is</em> the marketing budget.</td></tr>
+<tr><td><b>Household</b> (annual)</td><td class="num">$29.99 / yr<br>€29.99 · £24.99</td><td>Unlimited household members &amp; time-boxed sitter access · unlimited documents · all shaped exports · claim packs · travel readiness · monthly albums · custom typed fields &amp; graphs · CSV</td><td>Under the $39.99 pain line, above PetNoter. Priced per household, never per pet or per person. 7-day trial.</td></tr>
+<tr><td>Household (monthly)</td><td class="num">$3.99 / mo</td><td>Same</td><td>Exists for the crisis buyer (post-surgery, new puppy). Annual shown first and largest.</td></tr>
+<tr><td><b>Lifetime</b></td><td class="num">$79.99 one-time</td><td>Same, forever, for this household</td><td>The demand nobody serves. ~2.7 years of annual; priced so annual remains the default choice.</td></tr>
+</tbody></table></div>
+
+<div class="callout">
+  <div class="eyebrow">Unit economics at the realistic target</div>
+  <p>4,000 paying households × ~$27 blended ≈ <b>$108K/yr gross</b>; at the 15% small-business tier on both stores ≈ <b>$92K net</b>, against ~$1.5K/yr of Supabase + PowerSync + CI. Photos are the only cost that scales; compress client-side and cap free-tier storage. Break-even on infrastructure at roughly 60 subscribers.</p>
+</div>
+
+<p><b>Paywall rules (both stores, non-negotiable):</b> billed amount is the most prominent price (annual total larger than the "/month" equivalent); explicit auto-renew sentence; trial end shown as an exact date; Restore Purchases; Terms and Privacy links on the sheet; visible close control; CTA reads "Subscribe — $29.99/year"; cancellation reachable from Settings in two taps with a deep link to the store's subscription centre; no guilt screens. Enable Apple Family Sharing (irreversible, and a fit for a household product). Do not bother with EU alternative billing at launch — the fee stack nets to near zero at this scale.</p>
+
+<h2 id="screens">Screen by screen</h2>
+<p>Every screen below is specified across the same seven facets so nothing is forgotten on either platform. <span class="chip both">Both</span> means one Compose Multiplatform implementation; <span class="chip android">Android</span> / <span class="chip ios">iOS</span> mark where a platform diverges. <span class="chip v1">v1</span> ships at launch; <span class="chip v2">v2</span> follows once sync and reminders are proven in the field.</p>
+
+<div class="screen">
+  <div class="head"><h3>First run &amp; onboarding</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Get a pet on screen in under 60 seconds and make the household invite feel like the point, not a setting. No account required to start.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Three steps, one screen each: <b>Add your pet</b> (name, species, photo — everything else optional), <b>Who else looks after them?</b> (share-sheet invite link, skippable), <b>Done — here's Today</b>. Large photo well at top, one primary button, progress as three dots. Species picker shows dog, cat, then "Other" with free-text.</dd>
+    <dt>UX</dt><dd>Local-only until the user chooses to sync or invite. Never ask for notifications, camera or account here. "Import from 11pets / a spreadsheet" is a quiet link on step one. Disclaimer ("record-keeping tool, not a medical device — consult your vet") appears as one calm line on the final step, acknowledged by continuing.</dd>
+    <dt>Data</dt><dd>Creates <code>Pet</code> + a local <code>Household</code> with the device user as owner. Persists to Room immediately; sync begins only after sign-in.</dd>
+    <dt>Android</dt><dd>Photo via <code>PickVisualMedia</code> (Photo Picker — no permission) or <code>ACTION_IMAGE_CAPTURE</code>. Predictive back enabled between steps.</dd>
+    <dt>iOS</dt><dd><code>PHPickerViewController</code> (no permission, no purpose string). Interactive swipe-back wired between steps — prototype in week 1.</dd>
+    <dt>Play</dt><dd>Prominent-disclosure screen is required <em>before</em> the first cloud upload, not here. Adult target audience; no child-directed art.</dd>
+    <dt>Apple</dt><dd>5.1.1(v): app must be usable without login. 2.1: reviewer must be able to reach everything — pre-seeded demo household in review notes.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Sign in &amp; account</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Sync and household sharing need an identity. Offered when the user first invites someone or turns on sync — never as a wall.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Sheet with three equal buttons: <b>Continue with Apple</b>, <b>Continue with Google</b>, <b>Continue with email</b> (magic link with a 6-digit code fallback). One line: "Your local data stays; signing in just adds sync."</dd>
+    <dt>UX</dt><dd>Local pets merge into the new account, never overwritten. Email path avoids passwords entirely. If a user opens an invite link before signing in, we hold the invite and complete it after.</dd>
+    <dt>Data</dt><dd>Supabase Auth. User row + membership row. Sitters invited by link become full data subjects — serve them the privacy notice at join.</dd>
+    <dt>Android</dt><dd>Credential Manager for Google; Apple sign-in via web OAuth (works, slightly clunkier).</dd>
+    <dt>iOS</dt><dd>Native <code>ASAuthorizationController</code> (SwiftUI screen, not Compose). Store the Apple refresh token for later revocation.</dd>
+    <dt>Play</dt><dd>Account creation triggers the deletion requirement: in-app delete + public web URL declared in Data safety.</dd>
+    <dt>Apple</dt><dd>4.8: because we offer Google, <b>Sign in with Apple is mandatory</b>. 5.1.1(v): deletion in-app, with token revocation via Apple's REST API.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Today — the household feed</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">The daily-loop screen. Answers "what's done, what's due, who did it" in one glance for every pet, and offers one-tap logging.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Top: pet avatar row (scrollable, tap to filter, long-press to reorder; drawn character avatars from the Motivoa rig). Then <b>Due now</b> cards (meds, feeds, treatments) with a big "Done" and a smaller "Skip / Later". Then the timeline: attributed entries — "Sara · fed Luna · 8:02". Persistent quick-log FAB. Sleepy-thumb targets ≥ 48dp everywhere.</dd>
+    <dt>UX</dt><dd>Overdue items rise and turn amber (with an icon — never colour alone). "Mark done for all pets" appears when a task is shared across animals. Pull to refresh is unnecessary: the feed is live. Empty-state on day one shows a pre-filled sample entry labelled as an example.</dd>
+    <dt>Data</dt><dd>Reads <code>CareEvent</code> (immutable, UUID, author, occurredAt) + materialised <code>DueItem</code>s from schedule rules. Realtime subscription scoped by <code>household_id</code>.</dd>
+    <dt>Android</dt><dd>Glance widget mirrors the "due now" list. Notification channel "Household activity" for partner-logged events (default: silent).</dd>
+    <dt>iOS</dt><dd>WidgetKit small/medium widgets; Live Activity for an active dog walk is v2 and strictly functional (Apple 4.5.3).</dd>
+    <dt>Play</dt><dd>Content on this feed is UGC in a closed group: every entry needs a "Report" in its overflow menu.</dd>
+    <dt>Apple</dt><dd>1.2 applies; report + block reachable from here. 2.5.16: widget content must match this screen.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Quick Log sheet</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Two taps from anywhere to "fed", "walked", "gave meds", "peed", "pooped", "weighed" — with optional detail, never required detail.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Bottom sheet: pet selector (pre-selected if filtered), grid of large icon tiles, time chip defaulting to now (tap to backdate), optional note/photo/amount row collapsed. Custom event types appear after the defaults; user can pin and rename them.</dd>
+    <dt>UX</dt><dd>Tap a tile → logged → sheet closes → toast "Fed Luna · 8:02 · Undo". Retroactive entry, edit and delete via swipe on the feed. Amount fields remember the last value per pet. Species-scoped: a nail-trim tile never appears on the aquarium.</dd>
+    <dt>Data</dt><dd>Appends a <code>CareEvent</code>; conflict-free by construction. Edits write a new version row; deletes are tombstones. Photos compressed to ≤ 1600px before upload.</dd>
+    <dt>Android</dt><dd>Also launchable from the widget and from a notification action ("Done") without opening the app.</dd>
+    <dt>iOS</dt><dd>App Intents so Siri and interactive widgets can "Log that I fed Luna". Haptic on confirm.</dd>
+    <dt>Play</dt><dd>Camera via intent needs no permission; if an in-app camera is built later, <code>CAMERA</code> becomes a runtime permission with rationale.</dd>
+    <dt>Apple</dt><dd>Specific <code>NSCameraUsageDescription</code> string; generic strings are an automatic rejection.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Pet profile</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">The pet's home page: identity, essentials someone else might need in a hurry, and the doors into record, documents, journal and exports.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Hero photo or drawn character (user's choice), name, species/breed (free text allowed), age computed from birthday <em>and</em> "gotcha day". Essentials card: microchip, weight (latest + trend arrow), allergies, insurer + policy number, vet contact. Tabs: <b>Record · Meds · Documents · Journal</b>. Overflow: Export, Share with sitter, Archive.</dd>
+    <dt>UX</dt><dd>Every field optional; every field editable in place. Multiple photos per pet. Weight unit per pet (kg / lb / g). "Emergency card" action shows a full-screen high-contrast summary for handing to a stranger or an ER vet.</dd>
+    <dt>Data</dt><dd><code>Pet</code> with typed optional fields; <code>Weight</code> series; <code>Contact</code> rows for vets/insurers.</dd>
+    <dt>Android</dt><dd>Shortcut ("Open Luna") via <code>ShortcutManager</code> for multi-pet homes.</dd>
+    <dt>iOS</dt><dd>Spotlight indexing of pets; Dynamic Type must scale the essentials card to 200% without clipping.</dd>
+    <dt>Play</dt><dd>Breed reference art must be licensed or original — no scraped images; keep licence PDFs on file.</dd>
+    <dt>Apple</dt><dd>5.2.1 same; 2.3.8 screenshots of this screen must be 4+-appropriate (no wound photos).</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Health record</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">The portable lifetime record: vaccinations with expiry, conditions, vet visits, labs, weight chart — owner-controlled, never hostage to a clinic.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Sections in a single scroll: <b>Vaccinations</b> (name, given, due, batch; grouped names like "Lepto4" stay grouped; overdue badged), <b>Visits</b> (date, clinic, reason, notes, attached invoice), <b>Conditions</b> (active/resolved), <b>Labs</b> (value + unit + reference), <b>Weight</b> chart with tappable points. Add via a single "+" that asks what kind.</dd>
+    <dt>UX</dt><dd>Vaccination templates by species pre-fill names and typical intervals but never assert a schedule — copy says "typical interval; your vet decides." Edit without delete-and-recreate. Each visit can spawn a claim-pack export directly.</dd>
+    <dt>Data</dt><dd><code>Vaccination</code>, <code>Visit</code>, <code>Condition</code>, <code>LabResult</code>, <code>Weight</code> — all with <code>pet_id</code>, author, source (manual / import). Vaccination protocol text is written by us, not copied from kennel clubs or manufacturers.</dd>
+    <dt>Android</dt><dd>Weight chart in Compose Canvas; tabular-nums for values.</dd>
+    <dt>iOS</dt><dd>Same Canvas chart; verify VoiceOver reads chart points via explicit semantics.</dd>
+    <dt>Play</dt><dd>Health apps declaration: answer "no health features" (form is human-oriented) <em>and</em> ship the not-a-medical-device disclaimer as a hedge. Do not touch Health Connect.</dd>
+    <dt>Apple</dt><dd>Nutrition Labels: declare as User Content, not Health (documented reasoning). Age-rating questionnaire: answer the medical/wellness question honestly → expect 13+.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Medications &amp; schedules</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Job #1. Courses that pause, taper and cycle; exact clock times; quiet hours; "gave it early" tolerance; visible to the whole household.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Medication card: name, dose <em>as text</em> (never calculated), times-of-day chips, days pattern (daily / every N days / specific weekdays / monthly on date), start–end or ongoing, "Pause" toggle. Parasite preventatives are the same object with a monthly pattern and a supply counter ("3 doses left"). Adherence strip shows the last 14 days as dots.</dd>
+    <dt>UX</dt><dd>A due dose shows on Today for everyone; when one person marks it done, the others' reminder cancels within seconds. "Given early/late" keeps the true time. Snooze offers 15/30/60 min. Quiet hours default 22:00–07:00 per household, with an explicit "this one is critical — ring anyway" flag per medication.</dd>
+    <dt>Data</dt><dd><code>ScheduleRule</code> rows (pet, item, times, pattern, window). Occurrences are <em>derived</em>, never stored as alarms. A <code>DoseEvent</code> is a <code>CareEvent</code> subtype.</dd>
+    <dt>Android</dt><dd><code>SCHEDULE_EXACT_ALARM</code> only (never <code>USE_EXACT_ALARM</code> — upload blocked). Check <code>canScheduleExactAlarms()</code> before every schedule; WorkManager re-materialises the 7–14 day window; inexact fallback with an honest in-app banner if denied. Never request battery-optimisation exemption.</dd>
+    <dt>iOS</dt><dd>Hard cap of 64 pending local notifications: use <code>UNCalendarNotificationTrigger</code> for regular series, rolling window for the rest, re-materialise on foreground and BGAppRefresh. Long-horizon items (annual boosters) via server push as a backstop.</dd>
+    <dt>Play</dt><dd>Reminder-reliability disclaimer on this screen. No dosage calculator of any kind. Separate notification channel "Medication".</dd>
+    <dt>Apple</dt><dd>1.4.2 forbids dose calculators for anyone but manufacturers/hospitals — dose is a free-text field. 5.1.2(i): never require notifications to be enabled to use the app.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Reliable reminders — permissions &amp; health check</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">The one screen that explains, asks and proves. Shown the first time a schedule is created; reachable from Settings forever.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>A short explanation in the pet's name ("So we can remind you about Luna's 8pm tablet"), a single primary button per permission, and a live <b>status card</b>: notifications on/off, exact alarms granted/denied, battery restrictions detected, "next 3 scheduled reminders" listed with times. A "Send test reminder in 10 seconds" button.</dd>
+    <dt>UX</dt><dd>Contextual ask, never on cold launch. Pre-prompt before the system dialog. If denied twice, the screen shows a deep link to system settings and what will degrade ("reminders may arrive up to 15 minutes late"). The self-check runs on every foreground and surfaces a dismissible banner if the OS has silently revoked something.</dd>
+    <dt>Data</dt><dd>Stores permission state snapshots so support can see what a user's phone actually allowed. No personal data.</dd>
+    <dt>Android</dt><dd><code>POST_NOTIFICATIONS</code> runtime ask; <code>ACTION_REQUEST_SCHEDULE_EXACT_ALARM</code>; listen for <code>ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED</code>. Port Motivoa's <code>ReminderHealthProbe</code> pattern.</dd>
+    <dt>iOS</dt><dd><code>requestAuthorization</code> once, after the pre-prompt; consider <code>.provisional</code> for low-stakes household-activity nudges; show the 64-slot budget only in a debug menu.</dd>
+    <dt>Play</dt><dd>Restricted-permission declarations must match the manifest; <code>USE_EXACT_ALARM</code> is limited to alarm-clock/calendar apps and we do not qualify — submit a pre-launch policy question to confirm.</dd>
+    <dt>Apple</dt><dd>No <code>UIBackgroundModes</code> we don't genuinely use. 5.1.2(i): notifications are optional to use the app.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Documents vault &amp; viewer</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Vet invoices, prescriptions, lab PDFs, insurance policy, microchip certificate — stored, previewed, openable offline, and linkable to visits. The most consistently botched high-value feature in the category.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Grid of document cards with thumbnail, title, date, tags (Invoice · Prescription · Lab · Insurance · Vaccination · Other), linked visit. Full-screen viewer with pinch-zoom, page indicator, share and "Add to export". Capture flow: camera with edge-crop or pick a PDF/image.</dd>
+    <dt>UX</dt><dd>Save button is always above the keyboard and never behind system bars (a GreatPetCare reviewer diagnosed their CSS — we don't get that review). Documents download to the device on first sync and stay cached. Title is auto-suggested from date + tag. Multi-select to attach several to one claim.</dd>
+    <dt>Data</dt><dd><code>Document</code> row (pet, tag, visit_id, storage path, size, sha256) + object in Supabase Storage under <code>household_id/</code>, private bucket with signed URLs. Free tier 20 docs; paid unlimited. Client-side compression for images; PDFs stored as-is (≤ 20 MB).</dd>
+    <dt>Android</dt><dd><code>ACTION_OPEN_DOCUMENT</code> (SAF) for PDFs — no storage permission. In-app PDF rendering via <code>PdfRenderer</code>. Strip <code>READ_MEDIA_*</code> from the merged manifest.</dd>
+    <dt>iOS</dt><dd>Native <code>QLPreviewController</code> hosted inside Compose for the viewer — better than re-implementing. <code>PHPickerViewController</code> for images, <code>UIDocumentPickerViewController</code> for PDFs.</dd>
+    <dt>Play</dt><dd>Prominent disclosure + affirmative consent before the first document leaves the device. Data safety: "Files and docs", encrypted in transit.</dd>
+    <dt>Apple</dt><dd>Privacy manifest reason codes for file-timestamp and disk-space APIs. Nutrition Label: User Content → Photos/Videos and Other User Content.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Household &amp; members</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Who can see and log for these pets. Invite by link, roles, removal — and the Apple 4.3(b) answer: genuinely uncommon multi-user real-time sharing.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Member list with avatar, role chip (<b>Owner · Member · Sitter</b>), last active. "Invite" opens the system share sheet with a link and a short message. Pending invites listed with expiry and a revoke button. Per-member overflow: change role, remove, report.</dd>
+    <dt>UX</dt><dd>Invitee taps the link → app opens (or store, then app) → sees "Sara invited you to look after Luna and Milo" → accepts terms → joins. No contacts access, ever. Owner leaving must transfer ownership or dissolve the household — the flow is explicit, since account deletion depends on it.</dd>
+    <dt>Data</dt><dd><code>Membership</code> (user, household, role, expires_at). Invite tokens: single-use, 7-day expiry, revocable, validated server-side. Postgres RLS: every table filtered by <code>household_id</code> membership.</dd>
+    <dt>Android</dt><dd>Verified <b>App Links</b> via <code>assetlinks.json</code>. Never <code>READ_CONTACTS</code> (Contact Picker policy from Jan 2027 anyway).</dd>
+    <dt>iOS</dt><dd><b>Universal Links</b> via <code>apple-app-site-association</code>; no custom URL schemes (hijackable).</dd>
+    <dt>Play</dt><dd>UGC in a closed group: in-app report for content and users is explicitly required. Terms accepted before first upload; consent logged with version + timestamp.</dd>
+    <dt>Apple</dt><dd>1.2 has no private-group exemption: report, block, filtering and published contact info are all required. Invite model is identified and consented — not "anonymous chat".</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Sitter mode &amp; the sitter brief</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Job #7. A time-boxed guest who sees exactly what to do today, can log it, and loses access automatically when you're home. Also the feature that turns every holiday into a referral.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>For the owner: "Add a sitter" → dates → what they may see (care schedule always; health record and documents optional) → link. For the sitter: a simplified Today with the routine as a checklist, feeding amounts, medication instructions, vet and emergency contacts, "House notes", and a big "Something's wrong — call owner" button. Professional sitters get a household switcher.</dd>
+    <dt>UX</dt><dd>The sitter never sees the paywall, never gets marketing, never needs to create an account beyond a name and email. Owner sees a live feed of what the sitter logged. Access ends at the chosen time; the sitter is told when.</dd>
+    <dt>Data</dt><dd><code>Membership.role = SITTER</code> with <code>expires_at</code> enforced in RLS, not just UI. Sitter brief is also exportable as a PDF for non-app sitters.</dd>
+    <dt>Android</dt><dd>Sitter-role widget shows only today's checklist.</dd>
+    <dt>iOS</dt><dd>Same; Live Activity for "walk in progress" is v2.</dd>
+    <dt>Play</dt><dd>Time-limited access is data minimisation — say so in the privacy policy. Sitter is a data subject: privacy notice at join.</dd>
+    <dt>Apple</dt><dd>Named in review notes as the differentiator (4.3(b) defence). Demo: provide a second reviewer account already joined as a sitter.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Exports — shaped for the job</h3><span class="chip both">Both</span><span class="chip v1">v1</span> <span class="chip">Claim pack v1 · Travel v2</span></div>
+  <p class="why">Job #4. Not "a PDF" — five named artifacts, each laid out for the person who will read it.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Export picker as cards: <b>Boarding certificate</b> (vaccinations with expiry, microchip, vet, emergency contact), <b>New-vet handover</b> (full record, chronological), <b>Insurance claim pack</b> (selected visit + itemised invoice + relevant history + condition timeline + proof-of-payment slot), <b>Sitter brief</b>, <b>Full backup</b> (CSV + JSON + documents zip). Date range and pet selection on each. Preview before share.</dd>
+    <dt>UX</dt><dd>One tap from a visit → claim pack pre-filled with that visit. Generated on-device; shared via the system sheet; nothing is emailed by us. Footer on every PDF: "Generated by the pet owner from self-reported records. Not a medical document. Consult your veterinarian." Free tier: one export per month; paid: unlimited.</dd>
+    <dt>Data</dt><dd>Pure <code>ReportBuilder</code> in common code (port Motivoa's builder/generator split) → PdfKmp renderer, or <code>expect fun render()</code> with platform actuals as fallback. Tagged/accessible PDFs are an explicit engineering task (EAA).</dd>
+    <dt>Android</dt><dd><code>android.graphics.pdf.PdfDocument</code> actual (already proven in Motivoa). Share via <code>FileProvider</code>.</dd>
+    <dt>iOS</dt><dd><code>UIGraphicsPDFRenderer</code> actual; share via <code>UIActivityViewController</code>.</dd>
+    <dt>Play</dt><dd>Export is a digital feature — gating it behind the paid tier must go through Play Billing. No insurer logos without permission.</dd>
+    <dt>Apple</dt><dd>3.1.1 same. Never take referral fees from insurers without regulatory advice (FCA/IDD) — neutral export only.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Travel readiness</h3><span class="chip both">Both</span><span class="chip v2">v2</span></div>
+  <p class="why">Job #12 and a feature no competitor offers: compute the UK↔EU (and later US/CA) date windows from records we already hold.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Pick destination and travel date → a checklist with computed status: microchip before rabies vaccine ✓/✗, rabies ≥ 21 days before travel, AHC must be issued within 10 days of travel (shows the window), tapeworm treatment 24–120 h before UK return, valid-vaccination expiry. Each item links to the record that satisfies it or a "Add record" button.</dd>
+    <dt>UX</dt><dd>Framed as "paperwork readiness", never as legal advice; each rule shows its source and "rules change — confirm with your vet and gov.uk". Reminder offered for the AHC appointment window.</dd>
+    <dt>Data</dt><dd>Rules as versioned data (country pair → constraints), updatable remotely without an app release. Pure functions, fully unit-tested in <code>commonTest</code>.</dd>
+    <dt>Android</dt><dd>—</dd>
+    <dt>iOS</dt><dd>—</dd>
+    <dt>Play</dt><dd>Content is informational; keep the disclaimer. No government logos.</dd>
+    <dt>Apple</dt><dd>2.3.1: don't ship this dormant — either it's in the build and screenshots, or it isn't.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Journal &amp; monthly album</h3><span class="chip both">Both</span><span class="chip v1">v1</span> <span class="chip">Albums paid</span></div>
+  <p class="why">Job #10 and the most emotionally cited feature in the category. This is what converts a chore log into something nobody deletes.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Chronological photo feed per pet with captions; auto-generated <b>monthly album</b> pages ("Luna · March 2027", weight that month, notable events); "On this day" card on Today; birthday and gotcha-day markers; household members can react and comment on entries.</dd>
+    <dt>UX</dt><dd>Photos taken in Quick Log flow here automatically. Comments are threaded and attributed (DogNote's "can't tell who wrote what" complaint). Albums exportable as a PDF booklet (paid).</dd>
+    <dt>Data</dt><dd><code>JournalEntry</code> = <code>CareEvent</code> with media; <code>Reaction</code>, <code>Comment</code> rows. Photos private to the household.</dd>
+    <dt>Android</dt><dd>Coil 3 with disk cache; Photo Picker for imports.</dd>
+    <dt>iOS</dt><dd>Same; shared photo-picker code path.</dd>
+    <dt>Play</dt><dd>UGC: report on every photo and comment; block member.</dd>
+    <dt>Apple</dt><dd>1.2 same. Age-rating "social media" questions: private, invite-only feed → answer no, and be ready to justify it.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Paywall</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">One shared Compose paywall driven by RevenueCat offerings, identical on both platforms, built to pass Apple 3.1.2 and Play's subscription policy on the first submission.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Header names the household ("Everything for the Ahmed household"). Three plan cards — <b>Annual</b> pre-selected and visually dominant with the full billed price largest ("$29.99 / year"), monthly, lifetime. Feature list as short verbs. Beneath the CTA, plain text: trial length and exact end date, renewal sentence, cancel instructions. Footer: Restore Purchases · Terms · Privacy. Close control top-right, always visible.</dd>
+    <dt>UX</dt><dd>Appears only when the user hits a paid boundary ("Add a 4th household member", "21st document", "second export this month") with that boundary named. Never on launch, never after a memorialised pet, never to sitters. Purchase success is a quiet confirmation, not a celebration screen. Cancellation is two taps from Settings.</dd>
+    <dt>Data</dt><dd>RevenueCat entitlement "household" cached locally; entitlement is per <em>household</em> — one purchase unlocks every member's device.</dd>
+    <dt>Android</dt><dd>Play Billing 8 via purchases-kmp. Deep link for cancellation: <code>play.google.com/store/account/subscriptions?sku=…&amp;package=…</code>.</dd>
+    <dt>iOS</dt><dd>StoreKit 2 via purchases-kmp; Introductory Offer configured in App Store Connect for the trial; Family Sharing enabled (irreversible); Restore wired.</dd>
+    <dt>Play</dt><dd>Disclose terms, price, cycle, auto-renew "without additional action"; no SKU named "Free Trial"; localised prices everywhere; never reduce benefits after the first period; no dismiss-less prompts.</dd>
+    <dt>Apple</dt><dd>3.1.2: billed amount most prominent; trial duration + post-trial price; Restore; ToU + Privacy links in-app <em>and</em> metadata; Small Business Program enrolment (15%).</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Settings, privacy &amp; account deletion</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">The compliance screen that also earns trust: theme, units, quiet hours, notification channels, data export, delete account, disclaimers, support.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>Grouped list: <b>Household</b> (quiet hours, default units, first day of week), <b>Notifications</b> (per-channel toggles + reminder health check), <b>Appearance</b> (explicit light/dark/system toggle), <b>Data</b> (Export everything, Import, Storage used), <b>Subscription</b> (manage/cancel — two taps), <b>Privacy</b> (policy, terms, community guidelines, "Delete account"), <b>Help</b> (support email, in-app message, about, disclaimer).</dd>
+    <dt>UX</dt><dd>"Delete account" asks what to do with the household (transfer to another member or dissolve), then confirms once, then deletes — no survey, no guilt. "Export everything" produces the full backup zip first and offers it. Support messages get a promised 24-hour reply.</dd>
+    <dt>Data</dt><dd>Deletion removes user, memberships, and — if dissolving — all household data and storage objects; processors instructed to delete; retention exceptions named in the policy. Consent log kept 3 years (California ARL).</dd>
+    <dt>Android</dt><dd>Public deletion web page URL declared in Data safety; same page linked here.</dd>
+    <dt>iOS</dt><dd>Revoke Sign in with Apple token on deletion; optional Privacy Choices URL points to the same page.</dd>
+    <dt>Play</dt><dd>Both in-app deletion and a public, login-free, direct web link are required. Privacy policy must be HTTPS, non-PDF, public, and name the company and app.</dd>
+    <dt>Apple</dt><dd>5.1.1(v): a real in-app control, not a mailto. 1.2: published contact info. Standard EULA link at the end of the store description.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Archive &amp; memorial</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Law #2. A pet that has died leaves Today, keeps every record and photo, never counts against anything, and is never used to sell.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>From the profile overflow: "Luna has passed away" → date → a calm confirmation. The profile becomes a memorial: hero photo, years together, the album, the full record still readable and exportable. Muted palette; no badges, no streaks. An "Archived" section at the bottom of the pet row, collapsed by default. Also a plain "Archive (rehomed / no longer in my care)" variant.</dd>
+    <dt>UX</dt><dd>All reminders for that pet cancel instantly across the household. No promotional notifications ever again for that pet. Restoring from archive is one tap. Export + delete offered without pressure.</dd>
+    <dt>Data</dt><dd><code>Pet.status = MEMORIAL | ARCHIVED</code>, <code>passed_on</code>. Excluded from due-item materialisation.</dd>
+    <dt>Android</dt><dd>Widget drops the pet from its rotation.</dd>
+    <dt>iOS</dt><dd>Same; Spotlight entry updated.</dd>
+    <dt>Play</dt><dd>Not a policy surface — a reputation one. Never gate.</dd>
+    <dt>Apple</dt><dd>Screenshots of this screen must stay tasteful (2.3.8). If a memorial page is ever shareable publicly, it becomes public UGC and needs moderation.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Lost-pet poster</h3><span class="chip both">Both</span><span class="chip v2">v2</span></div>
+  <p class="why">Data we already hold — photo, microchip, description, contacts — assembled into a printable poster and a shareable page in the worst hour of an owner's year.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>"Luna is missing" → confirm last-seen area (free text, no GPS) → choose photo → poster preview (A4/Letter PDF + square social image) → share sheet + optional public link with a "Found" form.</dd>
+    <dt>UX</dt><dd>Zero paywall. Contact shown is a choice (phone, email, or the app's relay). Link expires in 90 days and is revocable; "Luna is home" closes it and thanks the sharers.</dd>
+    <dt>Data</dt><dd>Poster page rendered server-side from a snapshot; free text length-limited and URL-stripped; image passes safe-search moderation before going live; rate-limited per account; <code>noindex</code>.</dd>
+    <dt>Android</dt><dd>Save poster to Photos via <code>MediaStore</code> (no permission on API 29+).</dd>
+    <dt>iOS</dt><dd><code>NSPhotoLibraryAddUsageDescription</code> with a specific string, only if we save to the library.</dd>
+    <dt>Play</dt><dd>Public UGC: in-app report on the poster, moderation, revocability. No location permission — we never use GPS.</dd>
+    <dt>Apple</dt><dd>1.2 public-UGC obligations; 5.1.1(viii) — never compile a "found pets" directory from public data.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Widgets, Watch &amp; Wear</h3><span class="chip android">Android</span><span class="chip ios">iOS</span><span class="chip v1">Widgets v1</span><span class="chip v2">Watch/Wear v2</span></div>
+  <p class="why">The most-requested missing feature in the category's best shared-care app, and a concrete Apple 4.3(b) differentiator. The one place the view layer is written twice.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd><b>Small:</b> one pet — "Fed 3h ago · Meds 8pm" with a one-tap Log button. <b>Medium:</b> due-now list for the household. <b>Large:</b> today's timeline. Sensible redacted placeholder for the widget gallery.</dd>
+    <dt>UX</dt><dd>Interactive: tapping "Done" logs without opening the app and updates every household member's widget within seconds. Works for the free tier — a widget that is only an upsell risks rejection.</dd>
+    <dt>Data</dt><dd>Both widgets read the same Room database the app writes (Android: direct; iOS: App Group container). Formatting logic shared in Kotlin; only the view is native.</dd>
+    <dt>Android</dt><dd><code>androidx.glance</code> 1.2 — port Motivoa's <code>StreakWidget</code> pattern and <code>WidgetTheme</code> contrast rule. Wear OS tile in v2 (must be 64-bit, mentioned in listing).</dd>
+    <dt>iOS</dt><dd>WidgetKit extension in SwiftUI calling the KMP framework via App Group; App Intents for interactivity; watchOS complication "last fed" in v2 (SwiftUI; entitlement synced from phone).</dd>
+    <dt>Play</dt><dd>Wear quality guidelines apply if shipped; tiles/complications must be mentioned in the listing.</dd>
+    <dt>Apple</dt><dd>2.5.16 widgets relate to app content; 3.1.7 no ads in extensions; 3.1.2(a) subscription must work on Watch (sync entitlement, no Watch paywall).</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Import — from 11pets, spreadsheets and rivals</h3><span class="chip both">Both</span><span class="chip v1">11pets v1</span></div>
+  <p class="why">An unclaimed acquisition channel: 500K+ installs at 2.2★, thousands publicly leaving, an official export file, and no parser anywhere.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>"Switch from another app" → pick source (11pets export, PetnotePlus CSV, generic CSV, Pet Parents) → file picker → mapping preview (pets found, records found, anything we couldn't read) → import → summary. Also a marketing landing page "Leaving 11pets? Bring 7 years of records with you."</dd>
+    <dt>UX</dt><dd>Never silently drop a field — unmapped data lands in notes with its original label (GreatPetCare's "duplicated and incorrect" migration is the anti-pattern). Weight units are verified, not assumed (11pets' own bug). Import is reversible for 7 days.</dd>
+    <dt>Data</dt><dd>Parsers in <code>commonMain</code>, fuzz-tested against real export samples gathered in beta. Source recorded on every imported row.</dd>
+    <dt>Android</dt><dd>SAF <code>ACTION_OPEN_DOCUMENT</code> — no storage permission.</dd>
+    <dt>iOS</dt><dd><code>UIDocumentPickerViewController</code>; also accept "Open in…" from Files/Mail.</dd>
+    <dt>Play</dt><dd>Never put "11pets" in the title, keywords or description — competitor-brand stuffing is a metadata violation and a takedown trigger. The landing page lives on our website, not the listing.</dd>
+    <dt>Apple</dt><dd>4.1 / 5.2.1 same; no competitor names in metadata. Fine to support their file format.</dd>
+  </dl>
+</div>
+
+<div class="screen">
+  <div class="head"><h3>Report, block &amp; community guidelines</h3><span class="chip both">Both</span><span class="chip v1">v1</span></div>
+  <p class="why">Not a feature anyone asked for; a feature both stores require the moment two people share a feed. Build it once, wire it everywhere.</p>
+  <dl class="facets">
+    <dt>UI</dt><dd>"Report" in the overflow of every photo, note, comment and log entry; "Report member" and "Remove &amp; block" on every member row; a short reason picker; confirmation with the 24-hour commitment. Community guidelines page reachable from Settings and the website.</dd>
+    <dt>UX</dt><dd>Reporting never leaves the app. Blocked identities cannot be re-invited. The household owner can purge a removed member's contributions or keep them attributed.</dd>
+    <dt>Data</dt><dd><code>Report</code> rows → an abuse inbox with SLA tracking. Lightweight server-side image scan on upload; full moderation only on public surfaces (lost-pet pages).</dd>
+    <dt>Android</dt><dd>—</dd>
+    <dt>iOS</dt><dd>—</dd>
+    <dt>Play</dt><dd>UGC policy for closed groups: in-app reporting for content and users; terms accepted before creating content; objectionable content defined.</dd>
+    <dt>Apple</dt><dd>1.2: filter, report, block, published contact info, timely response — no private-group exemption.</dd>
+  </dl>
+</div>
+
+<h3>Beyond the field — features nobody has yet</h3>
+<div class="two">
+  <div class="card"><h4>Supply counter that reorders itself into a reminder</h4><ul><li>"3 flea doses left" → "Order more" reminder 10 days before you run out. Praised in 11pets' one surviving positive review; nobody else has it.</li></ul></div>
+  <div class="card"><h4>Vet-visit prep sheet</h4><ul><li>Before an appointment: one page of what changed since last visit — weight delta, new symptoms logged, adherence gaps, questions you noted. Rules-based in v1; on-device AI summary in v1.1 where the device supports it, with "consult your vet" inline.</li></ul></div>
+  <div class="card"><h4>Professional mode for sitters and walkers</h4><ul><li>One account, many households, a today-list across all of them. Turns every professional into a distribution channel to every client they have.</li></ul></div>
+  <div class="card"><h4>The drawn companion</h4><ul><li>Motivoa's Canvas creature rig — nine species, coats, moods, zero assets — becomes an optional avatar that reflects the pet's day: content after a walk, expectant near meal time. Adult art direction, never a mascot. A delight layer no record app has.</li></ul></div>
+  <div class="card"><h4>Trends that speak plainly</h4><ul><li>"Milo has lost 6% since March" as an observation, never a diagnosis. Graphs on any custom metric — the feature a diabetic-dog owner said he'd pay for.</li></ul></div>
+  <div class="card"><h4>Wearable bridge (v3)</h4><ul><li>Import Tractive activity/sleep as read-only context on the timeline — a real user asked 11pets for exactly this.</li></ul></div>
+</div>
+
+<h2 id="arch">Architecture &amp; stack</h2>
+<p>Kotlin Multiplatform with Compose Multiplatform for every screen except three that are better native on iOS: Sign in with Apple, the document viewer (<code class="mono">QLPreviewController</code>), and long-form text entry until CMP's native text input leaves experimental. Widgets are the one deliberate double-write. Everything platform-specific hides behind an interface in a <code class="mono">core-*</code> module; feature modules contain no <code class="mono">expect/actual</code> at all.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Concern</th><th>Choice</th><th>Version</th><th>Risk</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>UI</td><td>Compose Multiplatform</td><td class="num">1.12</td><td class="sev ok">Low</td><td>iOS stable since 1.8; concurrent rendering default. Accessibility is manual — every custom-drawn thing needs <code>semantics{}</code>.</td></tr>
+<tr><td>Navigation</td><td>Navigation 3 (multiplatform)</td><td class="num">1.1.1</td><td class="sev high">Medium</td><td>Google's direction; hand-register <code>NavKey</code> serializers off-JVM. Fallback: Decompose if iOS swipe-back fights us in the week-1 spike.</td></tr>
+<tr><td>Local DB</td><td>Room KMP</td><td class="num">2.8.x</td><td class="sev ok">Low</td><td>Same migration discipline as Motivoa's 12 versions; iOS via bundled SQLite driver. Stay off <code>androidx.room3</code> until after first ship.</td></tr>
+<tr><td>Prefs</td><td>DataStore Preferences</td><td class="num">1.2.x</td><td class="sev ok">Low</td><td>One <code>expect</code> for the file path.</td></tr>
+<tr><td>Backend</td><td>Supabase — EU region</td><td class="num">supabase-kt 3.x</td><td class="sev high">Medium</td><td>Auth (Apple + Google native), Postgres with RLS by <code>household_id</code>, Storage, Realtime. EU residency is the decisive GDPR win over Firebase.</td></tr>
+<tr><td>Sync</td><td>PowerSync</td><td class="num">1.13.x</td><td class="sev high">Medium</td><td>Offline-first queue, retry, partial sync between Room/SQLite and Postgres. The insurance policy against hand-rolling an outbox.</td></tr>
+<tr><td>Billing</td><td>RevenueCat purchases-kmp</td><td class="num">≥3.0</td><td class="sev ok">Low</td><td>Bundles the iOS SDK (no CocoaPods). One shared Compose paywall driven by Offerings; skip the iOS-only paywall UI.</td></tr>
+<tr><td>Reminders</td><td>Alarmee + own scheduler</td><td class="num">—</td><td class="sev high">Medium</td><td>Repeating API fits medication; still write the exact-alarm consent dance ourselves.</td></tr>
+<tr><td>Push</td><td>FCM + APNs (thin actuals)</td><td class="num">—</td><td class="sev ok">Low</td><td>Only for "your partner logged a dose" and long-horizon backstops — never the primary medication reminder.</td></tr>
+<tr><td>Files &amp; images</td><td>FileKit · Coil 3 · Peekaboo</td><td class="num">—</td><td class="sev ok">Low</td><td>Native pickers, no storage permissions; client-side compression.</td></tr>
+<tr><td>PDF</td><td>PdfKmp, with platform-actual fallback</td><td class="num">1.x</td><td class="sev high">Medium</td><td>Young library; Motivoa already proves the Android <code>PdfDocument</code> actual.</td></tr>
+<tr><td>DI</td><td>Koin + annotations</td><td class="num">4.1</td><td class="sev ok">Low</td><td>Shortest bridge from Hilt for a solo dev.</td></tr>
+<tr><td>Dates</td><td>kotlinx-datetime</td><td class="num">1.0</td><td class="sev ok">Low</td><td>Locale-aware formatting needs a 30-line <code>expect</code> (Motivoa's <code>DateFormats</code> documents why).</td></tr>
+<tr><td>i18n</td><td>Compose Resources</td><td class="num">—</td><td class="sev ok">Low</td><td>Same <code>strings.xml</code> shape as Motivoa; re-point the audit scripts. Launch locales: en, de, fr, es; add ar, hi later.</td></tr>
+<tr><td>Crash / analytics</td><td>Sentry KMP · Aptabase</td><td class="num">—</td><td class="sev ok">Low</td><td>No IDFA, so no ATT prompt; no Firebase Analytics.</td></tr>
+<tr><td>On-device AI</td><td>Interface first; ML Kit GenAI + Apple Foundation Models actuals</td><td class="num">v1.1</td><td class="sev high">Medium</td><td>Rules-based default for 100% of users; AI is progressive enhancement. On-device = not "collected", no third-party-AI disclosure.</td></tr>
+<tr><td>CI / iOS builds</td><td>Codemagic (+ a used Mac mini)</td><td class="num">—</td><td class="sev crit">High</td><td>You cannot build, sign or upload iOS from Windows. CI ships; only a Mac diagnoses (crashes, VoiceOver, screenshots).</td></tr>
+</tbody></table></div>
+
+<h3>Module graph</h3>
+<pre class="mono" style="overflow-x:auto;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:12.5px;line-height:1.5">shared/
+  core-model         pure data classes — everything depends on this, it depends on nothing
+  core-common        Result, dispatchers (expect), Clock, UUID (expect)
+  core-datetime      kotlinx-datetime + expect locale formatting
+  core-designsystem  palette (accentFill rule), type, motion tokens, atoms   ← Motivoa
+  core-database      Room 2.8 entities/DAOs + expect builder (App Group path on iOS)
+  core-network       Ktor + Supabase client
+  core-sync          PowerSync schema, event model, conflict policy
+  core-notifications expect Scheduler — rolling-window materialiser
+  core-billing       RevenueCat wrapper, Entitlement
+  core-ai            interface AiEngine + UnsupportedAiEngine (default)      ← Motivoa
+  core-files         FileKit, compression, expect share sheet
+  feature-pets · feature-log · feature-reminders · feature-household
+  feature-record · feature-documents · feature-export · feature-paywall
+  app-ui             Nav3 graph, scaffold, theme host
+androidApp/          Application, Glance widgets, FCM service
+iosApp/              SwiftUI shell, ComposeUIViewController, WidgetKit, Sign in with Apple, APNs</pre>
+
+<h3>The two designs that decide whether this works</h3>
+<div class="two">
+  <div class="card"><h4>Sync: an append-only event log</h4><ul>
+    <li>A care log is append-mostly. Every log line is an immutable <code>CareEvent</code> with a client UUID, <code>occurred_at</code>, <code>author_id</code>, <code>household_id</code>.</li>
+    <li>Inserts merge by union — no conflicts possible. Edits are new version rows; deletes are tombstones; last-writer-wins only on the rare same-row edit.</li>
+    <li>Mutable things (pet profile, schedule rules) are few and low-contention; LWW with <code>updated_at</code> is acceptable.</li>
+    <li>PowerSync syncs <code>WHERE household_id IN (my memberships)</code>; RLS enforces the same server-side so a revoked sitter's device stops receiving.</li>
+    <li>Target: a partner's log appears on your phone in &lt; 3 s on Wi-Fi; offline writes queue and reconcile without user action.</li>
+  </ul></div>
+  <div class="card"><h4>Reminders: schedule as data, OS as cache</h4><ul>
+    <li><code>ScheduleRule</code> rows are the truth. Occurrences are computed, never stored as alarms.</li>
+    <li>A materialiser keeps a rolling window (7 days Android, ≤ 40 slots iOS) of OS notifications; re-runs on foreground, background refresh, reboot, timezone change, and after any household member marks a dose done.</li>
+    <li>Android: <code>SCHEDULE_EXACT_ALARM</code> when granted, inexact + visible banner when not; WorkManager drives re-materialisation.</li>
+    <li>iOS: calendar triggers for regular series; server push as a backstop for long-horizon boosters.</li>
+    <li>A self-check (Motivoa's <code>ReminderHealthProbe</code>) compares what should be queued with what the OS says is queued, and tells the user when they differ.</li>
+  </ul></div>
+</div>
+
+<h2 id="reuse">What Motivoa gives us</h2>
+<p>The existing Android app is 311 files, single-module, Hilt + Room 2.8 + Compose. Its most valuable parts are already KMP-shaped. The audit found five things worth carrying over, in order of value per line.</p>
+<ol class="laws">
+  <li><b>The Canvas creature rig</b><span><code>CompanionChibi.kt</code> and friends: 1,130 lines of pure <code>DrawScope</code> on a 256-unit artboard, zero assets, zero Android imports, nine species with coats, a face rig, outfits, and ~20 unit tests. Drops into Compose Multiplatform Canvas unchanged. For a pet app it is almost literally the product's delight layer.</span></li>
+  <li><b>The <code>CompanionAiEngine</code> interface</b><span>Already models Ready / NeedsDownload / Unsupported with a streaming reply and a first-class "no AI" object. Rename it, add an iOS actual over Foundation Models, and the on-device AI architecture is done.</span></li>
+  <li><b>The <code>accentFill</code> palette contrast system</b><span>Any of 13 colours works in either theme because a measured WCAG rule (never fill with <code>accent</code>; use <code>accentDeep</code> in light) is pinned by <code>PaletteContrastTest</code>. Pure Compose; the widget theme derives the same rule.</span></li>
+  <li><b>Room migration discipline</b><span>Twelve versions with idempotent <code>hasColumn()</code> guards, exported schemas under version control, migration tests, and the <code>seedMutex</code> fix for a real double-seed race. For health records where data loss is unforgivable, the discipline matters more than the code.</span></li>
+  <li><b>Reminder policy, <code>Strings</code>, <code>DateFormats</code></b><span>Distinct notification IDs, distinct PendingIntent request codes, a health probe that asks the OS what's queued; and the i18n rule that engines look up ids and never concatenate sentences. Policy, not code — it survives the port intact.</span></li>
+</ol>
+<p><b>Sized blockers if code is ported rather than re-written:</b> 108 files reference <code class="mono">R.*</code> resources, 45 use <code class="mono">java.time</code>, 39 take a <code class="mono">Context</code>, 28 carry Hilt annotations. Recommendation: start the pet app as a fresh multi-module KMP project and <em>copy in</em> the five assets above, rather than porting Motivoa wholesale. The Motivoa modularisation happens later, on its own timeline, and can borrow the module graph from this project.</p>
+
+<h2 id="compliance">Store compliance</h2>
+<p>Condensed from the full policy audit (15 Sep 2026, against Apple's App Review Guidelines and Google Play's Developer Policy Center). The eight things most likely to bite, then the checklist. Anything marked <b>verify</b> comes from secondary sources or ambiguous policy text.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Risk</th><th>Store</th><th>Severity</th><th>Answer</th></tr></thead>
+<tbody>
+<tr><td>Medication reminders vs Android exact alarms — we don't qualify for <code>USE_EXACT_ALARM</code></td><td>Play</td><td class="sev crit">Critical</td><td><code>SCHEDULE_EXACT_ALARM</code> + consent flow + honest inexact fallback. Spike this before any feature work.</td></tr>
+<tr><td>Paywall disclosure (3.1.2) — the most common subscription rejection</td><td>Apple</td><td class="sev crit">Critical</td><td>Price most prominent, renewal sentence, trial end date, Restore, ToU + Privacy on the sheet.</td></tr>
+<tr><td>Health apps declaration is mandatory for every app; pet health isn't addressed</td><td>Play</td><td class="sev high">High</td><td>Declare "no health features", ship the disclaimer anyway, keep written reasoning. <b>Verify.</b></td></tr>
+<tr><td>Household sharing is UGC — no private-group exemption</td><td>Both</td><td class="sev high">High</td><td>Report on every item, report/block member, terms before first upload, 24-h abuse inbox.</td></tr>
+<tr><td>12 testers / 14 days closed test for new personal Play accounts</td><td>Play</td><td class="sev high">High</td><td><b>Register as an Organization</b> (D-U-N-S, ~2 weeks) — skips it entirely.</td></tr>
+<tr><td>EU DSA trader status must be declared or the app is removed in the EU</td><td>Both</td><td class="sev high">High</td><td>Business address + phone (publicly shown). Never a home address.</td></tr>
+<tr><td>European Accessibility Act — law, not store policy</td><td>EU</td><td class="sev high">High</td><td>VoiceOver/TalkBack labels, 200% type, 4.5:1 contrast, 48dp targets, accessibility statement. Microenterprise exemption likely — <b>verify per country</b>.</td></tr>
+<tr><td>Apple 4.3(b) (June 2026): "indistinguishable" apps in crowded categories rejected or removed</td><td>Apple</td><td class="sev high">High</td><td>Ship household sharing, sitter access, interactive widgets and claim-pack exports in v1; say so in review notes; keep shipping.</td></tr>
+</tbody></table></div>
+
+<div class="two">
+  <div class="card"><h4>Both stores</h4><ul class="check">
+    <li>Legal entity + D-U-N-S; enrol as Organization on both ($99/yr Apple, $25 Play)</li>
+    <li>DSA trader declaration with business contact details</li>
+    <li>Privacy policy (HTTPS, non-PDF, names company + app, retention + deletion), Terms (16+ minimum, auto-renew terms, no-vet-advice), Community Guidelines, accessibility statement, support email + URL</li>
+    <li>Public login-free account-deletion page; in-app Delete Account; household-owner deletion semantics defined</li>
+    <li>Paywall: all 3.1.2 / Play subscription elements; two-tap cancel from Settings; CTA states the obligation to pay</li>
+    <li>Report content / report user / block; consent log with ToS version</li>
+    <li>Disclaimers: first run, Settings, every export footer, every trend or AI output; reminder-reliability note on medication</li>
+    <li>No dose calculators; banned words: diagnose, treat, prescribe, clinically proven, vet-approved, detects</li>
+    <li>No competitor names in metadata; no price/promo words, emojis, "#1" or CTAs in title/icon/screenshots; licences on file for all art</li>
+    <li>Trademark clearance on the final name in US / EU / UK / CA</li>
+  </ul></div>
+  <div class="card"><h4>Google Play</h4><ul class="check">
+    <li>Target API 36; 16 KB page-size audit of every native <code>.so</code> (SQLite, PDF, image codecs); Billing Library 8+; AAB + Play App Signing</li>
+    <li>Data safety form consistent with privacy policy and observed behaviour, incl. SDKs</li>
+    <li>Health apps declaration; Target audience adults only, <em>not</em> Designed for Families; IARC rating; Ads = none; App access credentials</li>
+    <li>Manifest: <code>SCHEDULE_EXACT_ALARM</code> only; no <code>READ_MEDIA_*</code>, no <code>READ_CONTACTS</code>, no location, no battery-optimisation exemption</li>
+    <li>Prominent disclosure before first cloud upload; contextual <code>POST_NOTIFICATIONS</code> with channels</li>
+    <li>AI-generated content declaration for any AI-made listing asset</li>
+  </ul></div>
+  <div class="card"><h4>Apple</h4><ul class="check">
+    <li>Xcode 26 / iOS 26 SDK; deliberate Liquid Glass decision; <code>PrivacyInfo.xcprivacy</code> with reason codes (UserDefaults CA92.1, file timestamp, disk space); Privacy Report diffed against Nutrition Labels</li>
+    <li>Nutrition Labels: pet records as User Content, not Health (reasoning documented)</li>
+    <li>Age rating incl. medical/wellness and social-media questions → expect 13+; not Kids Category</li>
+    <li>Sign in with Apple (mandatory given Google) + token revocation on deletion</li>
+    <li>Specific purpose strings; <code>PHPicker</code> so no photo-library string; no unused keys</li>
+    <li>Review notes: two demo accounts already in one household, seeded pets, live invite link, numbered walkthrough, "no location/contacts", IAP sandbox note</li>
+    <li>Small Business Program; Introductory Offer for the trial; Family Sharing enabled (irreversible)</li>
+    <li>Rolling 64-notification window; no ads in widgets; Live Activities strictly functional</li>
+  </ul></div>
+</div>
+
+<h2 id="roadmap">Roadmap</h2>
+<p>Sequenced so that each phase is independently shippable and the two make-or-break systems — sync and reminders — are proven on real phones before anything decorative is built. Durations assume one developer at roughly 25 focused hours a week.</p>
+
+<div class="phase"><div class="when">Weeks 0–3</div><div><h4>Phase 0 — Foundations &amp; spikes</h4><ul>
+  <li>Register the entity, apply for D-U-N-S, enrol both developer programs as an Organization, secure the name and domain, trademark search.</li>
+  <li>Buy or rent the Mac; set up Codemagic; produce one signed iOS build of a hello-world KMP app end to end — <b>the single biggest practical blocker</b>.</li>
+  <li>Spike A: Nav3 on iOS with swipe-back. Spike B: Room KMP + PowerSync + Supabase EU round-trip between two devices. Spike C: exact-alarm consent flow on Android 14/15/16 and the iOS 64-slot materialiser.</li>
+  <li>Submit the Play policy question about <code>USE_EXACT_ALARM</code> eligibility; draft privacy policy and terms.</li>
+</ul></div></div>
+
+<div class="phase"><div class="when">Weeks 4–13</div><div><h4>Phase 1 — The daily loop (private beta)</h4><ul>
+  <li>Onboarding, sign-in, Today feed, Quick Log, pet profile, household invites with roles, medications &amp; schedules, reminder health screen, Settings with deletion.</li>
+  <li>Glance widget + WidgetKit small/medium. Copy in the Motivoa design system, creature rig (as avatar), AI engine interface with the Unsupported default.</li>
+  <li>Closed beta: 30 households, at least 10 with two or more members and one medicated pet. Measure sync latency, reminder punctuality, crash-free rate. Nothing ships until reminders are boringly correct.</li>
+</ul></div></div>
+
+<div class="phase"><div class="when">Weeks 14–22</div><div><h4>Phase 2 — The record (launch)</h4><ul>
+  <li>Health record, documents vault + viewer, journal, archive &amp; memorial, exports (boarding, new-vet, claim pack, sitter brief, backup), paywall, report/block, 11pets importer.</li>
+  <li>Compliance pass against the checklist; App Review notes; store listings in en/de/fr/es; ASO on "pet care tracker", "shared dog feeding tracker", "pet vaccination records"; the "Leaving 11pets?" landing page.</li>
+  <li>Launch both stores together. Reddit community launch in the dogcat.app style — ask what's missing, reply to everyone.</li>
+</ul></div></div>
+
+<div class="phase"><div class="when">Months 6–9</div><div><h4>Phase 3 — Retention &amp; reach</h4><ul>
+  <li>Sitter professional mode and multi-household switcher; travel readiness; supply counters; vet-visit prep sheet (rules-based, then on-device AI where available); comments and reactions; lost-pet poster.</li>
+  <li>Apple Watch and Wear OS quick-log; App Intents / Siri.</li>
+  <li>Begin the vet and sitter channel: a one-page "share the app with your clients" kit; explore a read-only clinic export link.</li>
+</ul></div></div>
+
+<div class="phase"><div class="when">Month 9+</div><div><h4>Phase 4 — Only if the numbers say so</h4><ul>
+  <li>Web portal (users love iPad + web sync); wearable-data bridge; food barcode scanning against allergies; additional locales (ar, hi); EU alternative billing only past ~$500K ARR.</li>
+</ul></div></div>
+
+<h2 id="risks">Risks &amp; open items</h2>
+<div class="two">
+  <div class="card"><h4>Highest risks</h4><ul>
+    <li><b>Reminder reliability on Android</b> if users deny exact alarms at scale — mitigated by the fallback and the health screen; re-architect to push-primary if beta shows &gt;30% denial.</li>
+    <li><b>iOS quality from a Windows developer</b> — text input, VoiceOver, swipe-back. Mitigated by the Mac, the week-1 spikes and three native screens.</li>
+    <li><b>Small-maintainer libraries</b> (Alarmee, PdfKmp, Peekaboo, supabase-kt) — each wrapped behind our own interface so a swap is one file.</li>
+    <li><b>Apple 4.3(b)</b> — cannot be resolved in advance; differentiate visibly in v1 and keep shipping.</li>
+    <li><b>Distribution ceiling</b> — the honest verdict above. The plan is sized for 100–300K installs; anything above requires the vet/sitter channel to work.</li>
+  </ul></div>
+  <div class="card"><h4>Decisions still open</h4><ul>
+    <li><b>Name.</b> "Pet Care Hub" is descriptive and may not clear trademark. Shortlist and clear before Phase 1 ends.</li>
+    <li><b>Species scope at launch.</b> Recommended: dog + cat templates, with "Other" fully supported (free text, grams) from day one — exotics keepers are vocal and under-served.</li>
+    <li><b>Lifetime price</b> ($79.99 proposed) and whether the free tier's document cap is 20 or 50.</li>
+    <li><b>Legal review</b> for EU launch: GDPR processor agreements, EAA exemption per member state, consumer-law renewal notices.</li>
+    <li><b>Motivoa timing.</b> Finishing Motivoa's billing and Play submission is weeks of work and should land before Phase 1 starts, so both apps aren't half-shipped at once.</li>
+  </ul></div>
+</div>
+
+<h2 id="sources">Sources</h2>
+<p>Primary and official sources used in the research behind this plan. Store figures are point-in-time (15 Sep 2026).</p>
+<ul class="sources">
+  <li><a href="https://developer.apple.com/app-store/review/guidelines/">Apple App Review Guidelines</a></li>
+  <li><a href="https://developer.apple.com/app-store/subscriptions/">Apple — Auto-renewable subscriptions</a></li>
+  <li><a href="https://developer.apple.com/app-store/app-privacy-details/">Apple — App privacy details</a></li>
+  <li><a href="https://developer.apple.com/support/offering-account-deletion-in-your-app">Apple — Offering account deletion</a></li>
+  <li><a href="https://developer.apple.com/documentation/bundleresources/privacy-manifest-files">Apple — Privacy manifest files</a></li>
+  <li><a href="https://developer.apple.com/news/?id=a233fmpw">Apple — Guideline updates, 8 Jun 2026 (4.3(b), 4.5.3)</a></li>
+  <li><a href="https://developer.apple.com/news/?id=ks775ehf">Apple — Updated age ratings</a></li>
+  <li><a href="https://developer.apple.com/news/?id=einwn76m">Apple — EU DSA trader status</a></li>
+  <li><a href="https://developer.apple.com/app-store/small-business-program/">Apple — Small Business Program</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/9900533">Play — Subscriptions policy</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/10144311">Play — User Data policy</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/13327111">Play — Account deletion requirements</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/9876937">Play — User Generated Content policy</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/14738291">Play — Health apps declaration</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/16679511">Play — Health Content and Services</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/14094294">Play — AI-Generated Content policy</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/15800983">Play — Photo &amp; Video permissions</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/16558241">Play — Sensitive permissions &amp; APIs</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/14151465">Play — Closed testing for new personal accounts</a></li>
+  <li><a href="https://support.google.com/googleplay/android-developer/answer/11926878">Play — Target API level requirements</a></li>
+  <li><a href="https://android-developers.googleblog.com/2026/06/play-expanded-billing.html">Play — Expanded billing choice &amp; fees (Jun 2026)</a></li>
+  <li><a href="https://developer.android.com/about/versions/14/changes/schedule-exact-alarms">Android — Exact alarms denied by default</a></li>
+  <li><a href="https://blog.jetbrains.com/kotlin/2026/05/compose-multiplatform-1-11-0/">Compose Multiplatform 1.11</a> · <a href="https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html">Navigation 3 in CMP</a></li>
+  <li><a href="https://developer.android.com/kotlin/multiplatform/room">Room for KMP</a> · <a href="https://github.com/supabase-community/supabase-kt">supabase-kt</a> · <a href="https://docs.powersync.com/client-sdks/reference/kotlin">PowerSync Kotlin</a></li>
+  <li><a href="https://github.com/RevenueCat/purchases-kmp">RevenueCat purchases-kmp</a> · <a href="https://github.com/Tweener/alarmee">Alarmee</a> · <a href="https://github.com/vinceglb/FileKit">FileKit</a> · <a href="https://github.com/conamobiledev/PdfKmp">PdfKmp</a></li>
+  <li><a href="https://codemagic.io/pricing/">Codemagic pricing</a> · <a href="https://kotlinlang.org/docs/native-improving-compilation-time.html">Kotlin/Native compile times</a></li>
+  <li><a href="https://play.google.com/store/apps/details?id=com.m11pets.elevenpets">11pets (Play)</a> · <a href="https://www.11pets.com/en/news/export-data">11pets data export</a></li>
+  <li><a href="https://play.google.com/store/apps/details?id=com.locai.petpartner">PetDesk</a> · <a href="https://play.google.com/store/apps/details?id=dogcat.app.android">Pet Care Tracker</a> · <a href="https://play.google.com/store/apps/details?id=com.mobikode.dog">DogLog</a></li>
+  <li><a href="https://play.google.com/store/apps/details?id=com.petnoter">PetNoter</a> · <a href="https://play.google.com/store/apps/details?id=app.dognote">DogNote</a> · <a href="https://play.google.com/store/apps/details?id=com.lancerdog.petnote_plus">PetnotePlus</a> · <a href="https://play.google.com/store/apps/details?id=com.pawprint.mobile">GreatPetCare</a></li>
+  <li><a href="https://app.sensortower.com/overview/app.dogo.com.dogo_android?country=US">Dogo (Sensor Tower)</a> · <a href="https://www.crunchbase.com/organization/pawprint">Pawprint (Crunchbase)</a></li>
+  <li><a href="https://www.reddit.com/r/Pets/comments/uo7xl3/how_do_you_track_your_pets_medical_history/">r/Pets — tracking medical history</a> · <a href="https://www.reddit.com/r/LifeProTips/comments/1ad9bp1/lpt_make_a_spreadsheet_to_keep_track_of_your_pets/">r/LifeProTips — vaccination spreadsheet</a></li>
+  <li><a href="https://www.rvc.ac.uk/small-animal-vet/general-practice/services/animal-health-certificate">RVC — Animal Health Certificate</a> · <a href="https://www.bankrate.com/insurance/pet-insurance/pet-insurance-claim-denials">Bankrate — claim denials</a></li>
+</ul>
+</main>
+</div>

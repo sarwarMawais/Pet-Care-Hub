@@ -1,0 +1,28 @@
+*.iml
+.gradle/
+.kotlin/
+**/build/
+build-logic/build/
+local.properties
+.idea/
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# iOS
+iosApp/build/
+iosApp/Pods/
+iosApp/*.xcworkspace/xcuserdata/
+iosApp/**/xcuserdata/
+*.xcuserstate
+
+# Secrets — never commit these. See docs/PLAN.md "Store compliance".
+*.keystore
+*.jks
+keystore.properties
+supabase.properties
+GoogleService-Info.plist
+google-services.json
+fastlane/report.xml
+fastlane/*.json
