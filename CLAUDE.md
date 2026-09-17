@@ -70,6 +70,9 @@ reviews already say what happens. Full evidence in `docs/research/competitors-an
 - **Compose on iOS draws pixels via Skiko**, so VoiceOver sees only what `semantics {}` declares. Anything custom-drawn is invisible by default. This is both a quality risk and an EU Accessibility Act risk.
 - **You cannot build, sign or upload iOS from Windows.** CI ships; only a Mac diagnoses (crash symbolication, VoiceOver, App Store screenshots).
 - **`java.time`, `java.util.UUID`, `java.io.File`, `System.currentTimeMillis()`, `SimpleDateFormat`, `Locale`** are all JVM-only. They compile fine on Android and break the moment the iOS target is added.
+- **Every `shared/*` module must declare `withHostTest {}`** in its `androidLibrary {}` block. Under AGP 9's `com.android.kotlin.multiplatform.library`, host unit tests are opt-in: without it `commonTest` still *compiles* but never *runs*, and Gradle prints `BUILD SUCCESSFUL`. On Windows the iOS test binaries cannot link either, so the module has no executing tests at all while looking green. See `docs/adr/0006`.
+- **AGP 9 rejects `com.android.library` / `com.android.application` alongside the Kotlin Multiplatform plugin.** Shared modules use `com.android.kotlin.multiplatform.library`; `androidApp` is a plain Android module and is *not* a KMP module. See `docs/adr/0006`.
+- **Grepping a merged manifest for a permission name gives false positives** — the merger preserves XML comments, so a comment saying "never declare `USE_EXACT_ALARM`" matches. Strip comments before checking.
 
 ## Copy in from Motivoa, do not port wholesale
 

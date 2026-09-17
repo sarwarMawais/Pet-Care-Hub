@@ -7,7 +7,11 @@
 rootProject.name = "PetCareHub"
 
 pluginManagement {
-    includeBuild("build-logic")
+    // Commented out for the same reason the includes below are: build-logic/ holds only an
+    // empty source directory — no settings.gradle.kts, no build.gradle.kts — so Gradle fails
+    // here before it ever reaches the module includes. Restore this line in the same change
+    // that gives build-logic a real build and its first convention plugin.
+    // includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -49,10 +53,10 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 // -------------------------------------------------------------------------
 
 // ---- Applications -------------------------------------------------------
-//include(":androidApp")
+include(":androidApp")
 
 // ---- Core: no feature may be depended on from here ----------------------
-//include(":shared:core-model")          // pure data classes; depends on nothing
+include(":shared:core-model")            // pure data classes; depends on nothing
 //include(":shared:core-common")         // Result, dispatchers (expect), Clock, UUID (expect)
 //include(":shared:core-datetime")       // kotlinx-datetime + expect locale-aware formatting
 //include(":shared:core-designsystem")   // palette (accentFill rule), type, motion, atoms

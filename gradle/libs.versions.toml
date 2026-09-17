@@ -8,12 +8,21 @@
 
 [versions]
 # --- Build ---------------------------------------------------------------
-agp = "8.13.2"
+# Raised from the plan's provisional 8.13.2 on 2026-09-17. Compose Multiplatform 1.12.0
+# depends on androidx.compose 1.12.0, which refuses to build on AGP below 9.1.0 and below
+# compileSdk 37. Verified by a real failing build, not by reading changelogs.
+agp = "9.4.0"
 # NOTE: purchases-kmp requires Kotlin 2.3.20+. Motivoa sits on 2.2.21 — we start higher here.
 kotlin = "2.3.20"
-ksp = "2.3.20-2.0.1"                  # verify: must match the Kotlin version exactly
-compileSdk = "36"                      # Play requires target API 36 (deadline passed 2026-08-31)
-targetSdk = "36"
+ksp = "2.3.12"                         # verified 2026-09-17 against Maven Central.
+# KSP no longer mirrors the Kotlin version. The old "<kotlin>-<ksp>" scheme ended at
+# 2.2.21-2.0.5; from 2.3.0 onward KSP versions independently. The value the plan carried
+# ("2.3.20-2.0.1") never existed. Check KSP's own release notes for Kotlin compatibility.
+# compileSdk and targetSdk are deliberately different. compileSdk 37 is forced by
+# androidx.compose 1.12.0 (see the agp note above); targetSdk stays at 36, which is what Play
+# actually requires. Compiling against a newer SDK does not opt us into its runtime behaviour.
+compileSdk = "37"
+targetSdk = "36"                       # Play requires target API 36 (deadline passed 2026-08-31)
 minSdk = "26"
 javaVersion = "17"
 
@@ -21,6 +30,8 @@ javaVersion = "17"
 composeMultiplatform = "1.12.0"        # [low] iOS stable since 1.8
 navigation3 = "1.1.1"                  # [med] needs CMP >= 1.10; hand-register NavKey serializers off-JVM
 lifecycleViewmodel = "2.10.0"          # KMP-capable
+activityCompose = "1.13.0"             # Android only: the Activity that hosts the Compose root
+composeBom = "2026.09.00"              # Android only: androidApp is not a KMP module (see ADR 0006)
 
 # --- Data ----------------------------------------------------------------
 room = "2.8.4"                         # [low] KMP-capable; stay off androidx.room3 until after first ship
@@ -64,6 +75,10 @@ turbine = "1.2.1"
 # Compose Multiplatform is applied via its Gradle plugin; artifacts come from the plugin's BOM.
 androidx-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -107,6 +122,9 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+# AGP 9 removed support for com.android.library alongside the Kotlin Multiplatform plugin.
+# Every shared/* module uses this instead. See docs/adr/0006-agp9-module-plugins.md.
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

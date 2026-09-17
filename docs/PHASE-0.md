@@ -30,8 +30,8 @@ Do not start Phase 1 until every box here is ticked.
 - [ ] Set up Codemagic (500 free min/month, then ~$0.10/min)
 - [ ] Pin the Xcode version in CI — a mismatched SDK breaks framework linking
 - [ ] **Produce one signed iOS build of a hello-world KMP app, end to end, and install it on a device.** Until this works, nothing else matters
-- [ ] Generate the Gradle wrapper (`gradle wrapper --gradle-version 9.2`) and commit it
-- [ ] Verify an Android debug build runs
+- [x] Generate the Gradle wrapper and commit it — **done 2026-09-17, pinned to Gradle 9.6.0, not the 9.2 written above.** AGP 9.4.0 refuses anything below 9.6.0
+- [x] Verify an Android debug build runs — **done 2026-09-17.** `:androidApp:assembleDebug` produces an APK; `:shared:core-model:testAndroidHostTest` runs 6 tests, 0 failures. Not yet installed on a physical device
 
 ## 3. The three spikes
 

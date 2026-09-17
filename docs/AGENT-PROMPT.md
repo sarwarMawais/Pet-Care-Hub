@@ -120,8 +120,10 @@ If you could not verify something, **say which part and why** rather than roundi
 
 | | |
 |---|---|
-| Gradle sync fails on a fresh clone | On purpose. Every `include()` is commented out until modules have build files. Uncomment as you go |
-| No Gradle wrapper is committed | Run `gradle wrapper --gradle-version 9.2` first |
+| Gradle sync fails on a fresh clone | Mostly fixed. `:androidApp` and `:shared:core-model` build; the other 20 `include()` lines are still commented out until those modules have build files. Uncomment as you go |
+| `local.properties` is not in the repo | It is gitignored. Write `sdk.dir=C:/Users/<you>/AppData/Local/Android/Sdk` — **forward slashes.** A `.properties` file reads `\U` as an escape, so backslashes silently mangle the path and the build fails with `Invalid file path` |
+| `JAVA_HOME` is not set on this machine | The only JDK is Android Studio's bundled one: `C:\Program Files\Android\Android Studio1\jbr` (JDK 25). Note the **`Android Studio1`** folder — the plain `Android Studio` folder is a partial install with no JBR |
+| A shared module's tests report success but never ran | It is missing `withHostTest {}`. See `docs/adr/0006` |
 | iOS cannot be built from this machine | Windows. Needs a Mac or Codemagic. See `PHASE-0.md` |
 | `java.time`, `java.util.UUID`, `java.io.File`, `Dispatchers.IO` | Compile fine on Android, break the moment iOS is added |
 | `USE_EXACT_ALARM` | Never declare it. It blocks the Play upload and we do not qualify |

@@ -1,0 +1,21 @@
+# Normalise line endings. Without this, files authored on Windows land in the repo with CRLF
+# and the iOS/CI machines see a different file than this one does.
+* text=auto eol=lf
+
+# gradlew is a shell script executed by Linux and macOS CI. CRLF breaks it outright
+# ("bad interpreter"), so it must stay LF regardless of platform.
+gradlew text eol=lf
+*.sh text eol=lf
+
+# gradlew.bat is run by cmd.exe and wants CRLF.
+gradlew.bat text eol=crlf
+
+# Never touch these.
+*.jar binary
+*.png binary
+*.jpg binary
+*.webp binary
+*.ttf binary
+*.otf binary
+*.keystore binary
+*.jks binary

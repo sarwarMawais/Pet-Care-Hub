@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Provisional. "Pet Care Hub" has not cleared trademark search - see
+      docs/adr/0001-provisional-name.md. This value must not be copied into store metadata,
+      marketing copy or the paywall until that is settled.
+    -->
+    <string name="app_name">Pet Care Hub</string>
+</resources>

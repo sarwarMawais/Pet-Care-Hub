@@ -9,6 +9,7 @@ One file per decision that would be expensive to reverse. Each records the conte
 | [0003](0003-append-only-care-log.md) | The care log is append-only | Accepted |
 | [0004](0004-reminders-are-data.md) | Reminders are data; the OS holds only a cache | Accepted, pending Spike C |
 | [0005](0005-unlimited-pets-free.md) | Unlimited pets in the free tier, priced per household | Accepted |
+| [0006](0006-agp9-module-plugins.md) | AGP 9, and the module plugin template for every shared module | Accepted |
 
 ## Writing a new one
 

@@ -19,15 +19,18 @@ Plus exports shaped for the moment someone demands paperwork: a boarding certifi
 
 ## What state it is in
 
-> **Planning is complete. Implementation has not started. There is no application code in this repository.**
+> **Planning is complete. Phase 0 is in progress. The Android toolchain builds; nothing else is implemented.**
 
 | | |
 |---|---|
-| Repo contains | Module directory structure, dependency catalogue, documentation |
-| Repo does **not** contain | Any Kotlin, Swift, build files per module, or a Gradle wrapper |
-| Gradle sync | **Will not work yet.** Every `include()` in `settings.gradle.kts` is commented out on purpose — the directories show the shape, but no module has a build file, so a sync would fail on the first one. Uncomment each as it gets a real build file. |
-| Next action | [`PHASE-0.md`](PHASE-0.md) — legal setup, toolchain, three spikes. None of it is feature code. |
-| Plan date | 15 September 2026. Research is point-in-time; re-verify versions and store policies before relying on them. |
+| Repo contains | Module directory structure, dependency catalogue, documentation, a committed Gradle wrapper, and **two working modules**: `:androidApp` and `:shared:core-model` |
+| Repo does **not** contain | Any Swift, any iOS build, any feature code, or build files for the other 20 modules |
+| Gradle sync | **Works for the two modules that exist.** The other 20 `include()` lines in `settings.gradle.kts` are still commented out — the directories show the shape, but those modules have no build file yet. Uncomment each as it gets one. |
+| Build baseline | Gradle 9.6.0 · AGP 9.4.0 · Kotlin 2.3.20 · compileSdk 37 / targetSdk 36 · JDK 25. **Not** the versions the plan was written against — see [`adr/0006`](adr/0006-agp9-module-plugins.md). |
+| Verified 2026-09-17 | `:androidApp:assembleDebug` produces an APK · `:shared:core-model:testAndroidHostTest` runs 6 tests, 0 failures · merged manifest contains no forbidden permission |
+| Not verified | The APK has **never been installed or run on a device or emulator.** Compiling is not running. |
+| Next action | [`PHASE-0.md`](PHASE-0.md) — legal setup, iOS toolchain, three spikes. |
+| Plan date | 15 September 2026. Research is point-in-time — three of its pinned versions were already wrong by 17 September. Re-verify, do not assume. |
 
 ## Read in this order
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      No permissions are declared yet, on purpose.
+
+      This module currently hosts a single Compose screen and needs nothing. Keeping the list
+      empty gives us a clean baseline for the merged-manifest check: anything that shows up in
+      the merged output was injected by a dependency, not written by us.
+
+      When permissions are added, the allowed set is INTERNET, POST_NOTIFICATIONS,
+      SCHEDULE_EXACT_ALARM and RECEIVE_BOOT_COMPLETED. Never USE_EXACT_ALARM, never READ_MEDIA_*,
+      never location, never REQUEST_IGNORE_BATTERY_OPTIMIZATIONS. See androidApp/README.md.
+    -->
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PetCareHub">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
