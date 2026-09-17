@@ -89,7 +89,7 @@ Append a new entry at the **top of this section** each session. Never edit an ol
 
 ## Session 3 — 2026-09-17 · GitHub, and the first build that actually runs
 
-**Commits:** `59705a9` (rebased to `c048b5c`), plus this session's build commit
+**Commits:** `c048b5c` (the plan narrative, rebased onto the GitHub initial commit), `61ab214` (the first working build)
 
 **Done**
 
